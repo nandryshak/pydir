@@ -8,4 +8,8 @@ You may use `.` or any relative naming to describe the directory.
 Please note that the program will write files to the chosen directory.
 
 # Configuration
-Config files coming soon.
+Edit cfg.py to modify user options.
+
+# License and Attribution
+
+Additionally, there is an attribution in the footer of the default template. Feel free to edit or remove it, but it would be appreciated if it were left in.
