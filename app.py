@@ -85,6 +85,7 @@ for root, dirs, files in os.walk("."):
     tmp = tmp.replace("$item-type$", 'icon up-icon')
     tmp = tmp.replace("$file-href$", "../")
     tmp = tmp.replace("$filename$", "Parent Directory")
+    tmp = tmp.replace("$filesize$", "")
     fileText += tmp
     fileText += "\n"
 
@@ -96,6 +97,7 @@ for root, dirs, files in os.walk("."):
         tmp = tmp.replace("$item-type$", 'icon dir-icon')# icon-type is dir.
         tmp = tmp.replace("$file-href$", ("." + "/" + item)) # subdirs are in "this" dir so it can be ./<file>
         tmp = tmp.replace("$filename$", item)
+        tmp = tmp.replace("$filesize$", "")
         fileText += tmp
         fileText += "\n"
         dirCount += 1
@@ -107,6 +109,29 @@ for root, dirs, files in os.walk("."):
         tmp = tmp.replace("$item-type$", 'icon file-icon') # icon-type is file.
         tmp = tmp.replace("$file-href$", ("." + "/" + item)) # files are in "this" dir so it can be ./<file>
         tmp = tmp.replace("$filename$", item)
+
+        # Handle Filesizes
+        fileSize = len(open(root + "/" + item, "rb").read()) #File size is the length of all the bytes of the file.
+
+        if fileSize >= 1000000000000: # More than a trillion bytes means it's in terabytes.
+            fileSize = round((fileSize / 1000000000000), 2) # convert to terabytes
+            fileSize = str(fileSize) + "TB"
+        elif fileSize >= 1000000000: # More than a billion means it's in gigabytes.
+            fileSize = round((fileSize / 1000000000), 2) # convert to gigabytes
+            fileSize = str(fileSize) + "GB"
+        elif fileSize >= 1000000: # More than a million means it's in megabytes.
+            fileSize = round((fileSize / 1000000), 2) # convert to megabytes
+            fileSize = str(fileSize) + "MB"
+        elif fileSize >= 1000: # More than a thousand means it's in kilobytes.
+            fileSize = round((fileSize / 1000), 2) # convert to kb
+            fileSize = str(fileSize) + "KB"
+        else: #Anything below is in bytes.
+            fileSize = str(fileSize) + "B"
+
+        # Add in the converted statistic
+        tmp = tmp.replace("$filesize$", str(fileSize))
+
+
         fileText += tmp
         fileText += "\n"
         fileCount += 1
@@ -140,7 +165,7 @@ for root, dirs, files in os.walk("."):
     fileText = fileText.replace("$breadcrumb$", breadCrumb) # write composed breadcrumb to file.
 
     # Write the composed HTML to a file.
-    dirFile.write("") 
+    dirFile.write("")
     dirFile.write(fileText)
     console.log("Generated entries for " + str(dirCount) + " directories and " + str(fileCount) + " files in folder /" + root.strip("./") + ". Took " + str(round(((clock() - __DIRSTARTTIME__)*1000), 3)) + "ms")
     # print(fileText)
