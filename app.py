@@ -51,20 +51,23 @@ for root, dirs, files in os.walk("."):
     fileText = "" # Begin with an empty string.
 
     # Add the "../" directory.
-    tmp = _ITEMTEMPLATE.replace("$class$", 'icon up') # icon-type is up (dir up)
-    tmp = tmp.replace("$file-href$", ("../"))
+    tmp = _ITEMTEMPLATE.replace("$class$", 'icon') # icon-type is up (dir up)
+    tmp = tmp.replace("$item-type$", 'icon up-icon')
+    tmp = tmp.replace("$file-href$", "../")
     tmp = tmp.replace("$filename$", "Parent Directory")
     fileText += tmp
     fileText += "\n"
 
     for item in dirs: # First add the dirs
-        tmp = _ITEMTEMPLATE.replace("$class$", 'icon dir') # icon-type is dir.
+        tmp = _ITEMTEMPLATE.replace("$class$", 'icon')
+        tmp = tmp.replace("$item-type$", 'icon dir-icon')# icon-type is dir.
         tmp = tmp.replace("$file-href$", ("." + "/" + item)) # subdirs are in "this" dir so it can be ./<file>
         tmp = tmp.replace("$filename$", item)
         fileText += tmp
         fileText += "\n"
     for item in files: # Second add the files
-        tmp = _ITEMTEMPLATE.replace("$class$", 'icon file') # icon-type is file.
+        tmp = _ITEMTEMPLATE.replace("$class$", 'icon file')
+        tmp = tmp.replace("$item-type$", 'icon file-icon') # icon-type is file.
         tmp = tmp.replace("$file-href$", ("." + "/" + item)) # files are in "this" dir so it can be ./<file>
         tmp = tmp.replace("$filename$", item)
         fileText += tmp
