@@ -2,6 +2,7 @@
 import sys
 import os
 from json import dumps
+from time import clock
 
 # Custom Modules (found in ./lib )
 import lib.debug as debug
@@ -14,8 +15,7 @@ _DIRFILENAME = "directory.html" # What should the directory html file be called?
 console = debug.logger(level=0) # What kinds of messages to log. See logging module for more info.
 
 _ITEMTEMPLATE = open("rsc/item-template.html").read() # What HTML to duplicate and fill for each file/dir
-_DIRHEADER = open("rsc/dir-header.html").read() # This is the html that should contain css styles.
-_DIRFOOTER = open("rsc/dir-footer.html").read() # This is the html that should contain js script references.
+_THEME = open("rsc/theme.html").read() # This is the html that should enclose the $content$
 
 
 # Misc Utilities
@@ -24,10 +24,13 @@ def stub():
 
 # MAIN PROGRAM
 os.chdir(_ROOTDIR) # Switch to specified working directory.
+console.log("Working directory is now " + _ROOTDIR)
 
 # Get directory tree based on first argument
+console.log("Beginning directory traversal...")
+__STARTTIME__ = clock()
 for root, dirs, files in os.walk("."):
-
+    __DIRSTARTTIME__ = clock()
     # In every root directory, create a directory.html file.
     try:
         dirFile = open(root + ("/"+_DIRFILENAME), "w")
@@ -49,6 +52,8 @@ for root, dirs, files in os.walk("."):
 
     # Now traverse files and folders in the current root and add them, through the template, to directory.html
     fileText = "" # Begin with an empty string.
+    fileCount = 0 # Keep track of how many entries are in this particular directory.
+    dirCount = 0
 
     # Add the "../" directory.
     tmp = _ITEMTEMPLATE.replace("$class$", 'icon') # icon-type is up (dir up)
@@ -65,6 +70,8 @@ for root, dirs, files in os.walk("."):
         tmp = tmp.replace("$filename$", item)
         fileText += tmp
         fileText += "\n"
+        dirCount += 1
+
     for item in files: # Second add the files
         tmp = _ITEMTEMPLATE.replace("$class$", 'icon file')
         tmp = tmp.replace("$item-type$", 'icon file-icon') # icon-type is file.
@@ -72,7 +79,15 @@ for root, dirs, files in os.walk("."):
         tmp = tmp.replace("$filename$", item)
         fileText += tmp
         fileText += "\n"
+        fileCount += 1
 
-    dirFile.write(_DIRHEADER + '\n<h1 class="title">Index of /' + root.strip("./") + '</h1>' + fileText + _DIRFOOTER)
+    fileText = _THEME.replace("$content$", fileText) # Insert the generated page-content into the theme.
 
-console.log("Done.")
+    # Theme Variable Insertion here
+    fileText = fileText.replace("$root-dir$", '<h1 class="title">Index of /' + root.strip("./") + '</h1>')
+
+    # Write the composed HTML to a file.
+    dirFile.write(fileText)
+    console.log("Generated " + str(dirCount) + " directories and " + str(fileCount) + " files in folder /" + root.strip("./") + ". Took " + str(round(((clock() - __DIRSTARTTIME__)*1000), 3)) + "ms")
+
+console.log("Done. Took " + str(round(((clock() - __STARTTIME__)*1000), 3)) + "ms")
