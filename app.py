@@ -37,9 +37,7 @@ _STYLESHEET = cfg._STYLESHEET # This stylesheet will be placed in the <head> sec
 _ALPHAORDER = cfg._ALPHAORDER
 print("Done")
 
-# Misc Utilities
-def stub():
-    pass
+
 
 '''# MAIN PROGRAM START #'''
 
@@ -110,8 +108,11 @@ for root, dirs, files in os.walk("."):
         tmp = tmp.replace("$filename$", item)
 
         # Handle Filesizes
-        fileSize = int(os.popen("du -b " + '"' + root + "/" + item + '"').read().split("\t")[0]) # Temp until better way of checking is found
-        #fileSize = len(open(root + "/" + item, "rb").read()) #File size is the length of all the bytes of the file.
+        try: # Preferred method, as it is very fast.
+            fileSize = int(os.popen("du -b " + '"' + root + "/" + item + '"').read().split("\t")[0])
+        except: # Failure likely means DU is not installed on the system, therefore we should use the slow method.
+            console.warn("DU is either not installed or erroring. It is reccomended to have DU installed on your system; the backup method is very slow.")
+            fileSize = len(open(root + "/" + item, "rb").read()) #File size is the length of all the bytes of the file. SLOW
 
         if fileSize >= 1000000000000: # More than a trillion bytes means it's in terabytes.
             fileSize = round((fileSize / 1000000000000), 2) # convert to terabytes
