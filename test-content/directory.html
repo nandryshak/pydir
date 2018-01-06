@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
 
-    <title>Index of /</title>
+    <title>Index of localhost/</title>
 
-    <!-- Bootstrap Stuff -->
     <link rel="stylesheet" href="#">
 
     <!-- Favicon -->
@@ -74,16 +73,16 @@
     }
 
   div.file-icon {
-    background: url("/rsc/images/fallback/file.png") left top no-repeat;
+    background: url("/include/images/fallback/file.png") left top no-repeat;
 
   }
 
   div.dir-icon {
-    background: url("/rsc/images/fallback/folder.png") left top no-repeat;
+    background: url("/include/images/fallback/folder.png") left top no-repeat;
   }
 
   div.up-icon {
-    background: url("/rsc/images/fallback/folder-parent.png") left top no-repeat;
+    background: url("/include/images/fallback/folder-parent.png") left top no-repeat;
   }
 
   footer {
@@ -97,17 +96,12 @@
 
   </head>
   <body>
-    <h1 class="title">Index of /</h1>
-    <h3 class="breadcrumb"><a href="#">root/</a> </h3>
+    <h1 class="title">Index of localhost/</h1>
+    <h3 class="breadcrumb"><a href="#">localhost/</a> </h3>
 
     <div class="directory-item" onclick="window.location.href='../'">
   <div class="icon up-icon"></div>
   <a class="icon" draggable="true" href="../">Parent Directory</a></div>
-</div>
-
-<div class="directory-item" onclick="window.location.href='./folder2'">
-  <div class="icon dir-icon"></div>
-  <a class="icon" draggable="true" href="./folder2">folder2</a></div>
 </div>
 
 <div class="directory-item" onclick="window.location.href='./folder'">
@@ -115,9 +109,9 @@
   <a class="icon" draggable="true" href="./folder">folder</a></div>
 </div>
 
-<div class="directory-item" onclick="window.location.href='./test2'">
-  <div class="icon file-icon"></div>
-  <a class="icon file" draggable="true" href="./test2">test2</a></div>
+<div class="directory-item" onclick="window.location.href='./folder2'">
+  <div class="icon dir-icon"></div>
+  <a class="icon" draggable="true" href="./folder2">folder2</a></div>
 </div>
 
 <div class="directory-item" onclick="window.location.href='./test'">
@@ -128,6 +122,11 @@
 <div class="directory-item" onclick="window.location.href='./test.ext'">
   <div class="icon file-icon"></div>
   <a class="icon file" draggable="true" href="./test.ext">test.ext</a></div>
+</div>
+
+<div class="directory-item" onclick="window.location.href='./test2'">
+  <div class="icon file-icon"></div>
+  <a class="icon file" draggable="true" href="./test2">test2</a></div>
 </div>
 
 

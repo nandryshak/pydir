@@ -31,7 +31,7 @@ except: pass
 console.log("Assigning config values from `cfg.py` locally...", endl=" ")
 _EXCLUDES = cfg._EXCLUDES # Exclude matching files or folders from program operation
 _DIRFILENAME = cfg._DIRFILENAME # What should the directory html file be called?
-
+_DOMAIN = cfg._DOMAIN
 _ITEMTEMPLATE = cfg._ITEMTEMPLATE # What HTML to duplicate and fill for each file/dir
 _THEME = cfg._THEME # This is the html that should enclose the $content$
 _STYLESHEET = cfg._STYLESHEET # This stylesheet will be placed in the <head> section of the final HTML
@@ -43,9 +43,12 @@ def stub():
     pass
 
 '''# MAIN PROGRAM START #'''
+
+console.log("Copying ./include to " + _ROOTDIR + "include")
+os.system("cp -r include/ " + _ROOTDIR)
+
 os.chdir(_ROOTDIR) # Switch to specified working directory.
 console.log("Working directory is now " + _ROOTDIR)
-
 # Get directory tree based on first argument
 console.log("Beginning directory traversal...")
 __STARTTIME__ = clock()
@@ -64,7 +67,8 @@ for root, dirs, files in os.walk("."):
             try:
                 files.remove(item)
             except:
-                console.warn("Exclude " + item + " not found in \"" + root + "\" ... Moving on...")
+                pass
+                #console.warn("Exclude " + item + " not found in \"" + root + "\" ... Moving on...")
     # Also remove .html files.
     for item in files:
         if item.endswith(".html"):
@@ -112,15 +116,17 @@ for root, dirs, files in os.walk("."):
     # Theme Variable Insertion here
     fileText = fileText.replace("$root-dir$", root.strip("./"))
     fileText = fileText.replace("$stylesheet$", _STYLESHEET)
+    fileText = fileText.replace("$domain$", _DOMAIN)
 
     # => Handle the Breadcrumbs
     path = root.split("/")
     breadCrumb = ""
     crumbItem = '<a href="$addr$">$name$/</a> '
 
+
     for crumb in path:
         if crumb == ".":
-            breadCrumb += crumbItem.replace("$name$", "root")
+            breadCrumb += crumbItem.replace("$name$", _DOMAIN)
         else:
             breadCrumb += crumbItem.replace("$name$", crumb.strip("./"))
 
@@ -134,7 +140,8 @@ for root, dirs, files in os.walk("."):
     fileText = fileText.replace("$breadcrumb$", breadCrumb) # write composed breadcrumb to file.
 
     # Write the composed HTML to a file.
+    dirFile.write("") 
     dirFile.write(fileText)
-    console.log("Generated " + str(dirCount) + " directories and " + str(fileCount) + " files in folder /" + root.strip("./") + ". Took " + str(round(((clock() - __DIRSTARTTIME__)*1000), 3)) + "ms")
-
+    console.log("Generated entries for " + str(dirCount) + " directories and " + str(fileCount) + " files in folder /" + root.strip("./") + ". Took " + str(round(((clock() - __DIRSTARTTIME__)*1000), 3)) + "ms")
+    # print(fileText)
 console.log("Done. Took " + str(round(((clock() - __STARTTIME__)*1000), 3)) + "ms")
