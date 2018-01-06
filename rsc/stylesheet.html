@@ -7,12 +7,19 @@
     width: 100vw;
   }
 
+  .header {
+    background-color: #dddddd;
+    padding-top: 10px;
+    padding-left: 30px;
+    border-bottom: 20px solid white;
+  }
+
   h1 {
     white-space: nowrap;
   }
 
   .breadcrumb {
-    padding-bottom: 30px;
+    padding-bottom: 15px;
     padding-left: 20px;
   }
 
@@ -30,13 +37,16 @@
     padding: 20px;
     padding-left: 25px;
     background-color: #dddddd;
-    border-bottom: 1px solid white
-
+    border-bottom: 1px solid white;
+    transition-duration: 0.4s;
+    transition-property: all;
   }
 
   div.directory-item:hover {
     padding-left: 30px;
     background-color: #ededed;
+    transition-duration: 0.4s;
+    transition-property: all;
   }
 
   a.icon {
@@ -49,6 +59,7 @@
   a.icon:hover {
     text-decoration: none;
     text-emphasis-style: none;
+
   }
 
   div.icon {
@@ -76,5 +87,11 @@
     padding-bottom: 5px;
     background-color: #cccccc;
     color: black;
+  }
+
+  .file-size {
+    color: #aaaaaa;
+    float: right;
+    padding-right: 5vw;
   }
 </style>
