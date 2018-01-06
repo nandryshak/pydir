@@ -13,11 +13,68 @@
     <link rel="shortcut icon" href="/rsc/images/favicon/favicon-16-32.ico" type="image/x-icon">
     <link rel="icon" href="/rsc/images/favicon/favicon-16-32.ico" type="image/x-icon">
 
-    $stylesheet$
+    <style>
+  body {
+    font-family: "Ubuntu", "Roboto", "Helvetica", "Arial", "sans-serif";
+    font-weight: normal;
+    font-size: 13px;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  h1 {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    white-space: nowrap;
+  }
+
+  div.directory-item {
+    padding: 20px;
+    padding-left: 25px;
+    background-color: #dddddd
+  }
+
+  div.directory-item:hover {
+    padding-left: 30px;
+    background-color: #ededed
+  }
+
+  a.icon {
+    -webkit-padding-start: 1.5em;
+    text-decoration: none;
+    color: black;
+    padding-bottom: 20px;
+  }
+
+  a.icon:hover {
+    text-decoration: none;
+    text-emphasis-style: none;
+  }
+
+  div.icon {
+      float: left;
+      padding: 20px;
+      padding-right: 10px;
+  }
+
+  div.file-icon {
+    background: url("../rsc/images/fallback/file.png") left top no-repeat;
+
+  }
+
+  div.dir-icon {
+    background: url("../rsc/images/fallback/folder.png") left top no-repeat;
+  }
+
+  div.up-icon {
+    background: url("../rsc/images/fallback/folder-parent.png") left top no-repeat;
+  }
+</style>
+
     
   </head>
   <body>
-    <h1 class="title">Index of /<h1 class="title">Index of /folder2</h1></h1>
+    <h1 class="title">Index of /folder2</h1>
 
     <div class="directory-item" onclick="window.location.href='../'">
   <div class="icon up-icon"></div>

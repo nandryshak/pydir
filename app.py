@@ -1,3 +1,14 @@
+"""
+##########################################
+PYDir - Generate beautiful static directory listings for your site.
+
+Edit rsc/theme.html to modify the overall site structure.
+The file rsc/stylesheet.html will be automatically added into the $stylesheet$ portion of the theme.html text.
+rsc/item-template.html will be cloned and filled once per item in the directory, including `../` directories.
+See rsc/stylesheet.html for the default css classes used in generation.
+##########################################
+"""
+
 # Python Builtins
 import sys
 import os
@@ -6,13 +17,12 @@ from time import clock
 
 # Custom Modules (found in ./lib )
 import lib.debug as debug
-#import lib.format
 
-# Set up runtime variables.
+''' Set up runtime variables and configuration values. '''
 _EXCLUDES = ["lib", "app.py", "rsc"] # Exclude certain files or folders from program operation
-_ROOTDIR = sys.argv[1] # The root working directory is specified as a cli arg.
+_ROOTDIR = sys.argv[1] # The root working directory is specified as the first cli arg.
 _DIRFILENAME = "directory.html" # What should the directory html file be called?
-console = debug.logger(level=0) # What kinds of messages to log. See logging module for more info.
+console = debug.logger(level=0) # -1 for none, 0 for info, 1 for warning, 2 for errors, 3 for verbose.
 
 _ITEMTEMPLATE = open("rsc/item-template.html").read() # What HTML to duplicate and fill for each file/dir
 _THEME = open("rsc/theme.html").read() # This is the html that should enclose the $content$
@@ -23,7 +33,7 @@ _STYLESHEET = open("rsc/stylesheet.html").read() # This stylesheet will be place
 def stub():
     pass
 
-# MAIN PROGRAM
+'''# MAIN PROGRAM START #'''
 os.chdir(_ROOTDIR) # Switch to specified working directory.
 console.log("Working directory is now " + _ROOTDIR)
 
@@ -85,7 +95,8 @@ for root, dirs, files in os.walk("."):
     fileText = _THEME.replace("$content$", fileText) # Insert the generated page-content into the theme.
 
     # Theme Variable Insertion here
-    fileText = fileText.replace("$root-dir$", '<h1 class="title">Index of /' + root.strip("./") + '</h1>')
+    fileText = fileText.replace("$root-dir$", root.strip("./"))
+    fileText = fileText.replace("$stylesheet$", _STYLESHEET)
 
     # Write the composed HTML to a file.
     dirFile.write(fileText)
