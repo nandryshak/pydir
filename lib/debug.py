@@ -1,5 +1,6 @@
 from time import gmtime
 from sys import exit
+from json import dumps
 
 '''
 Monty's Debug Library. Please note this software may be licenced differently
@@ -38,22 +39,38 @@ class logger:
     # Standard Logging level (1)
     def log(self, msg, endl="\n"):
         if(self.level >= 0):
-            print("[INFO][" + __ftime__() + "] " + msg, end=endl)
+            try:
+                print("[INFO][" + __ftime__() + "] " + msg, end=endl)
+            except:
+                print("[INFO][" + __ftime__() + "] " + dumps(msg), end=endl)
 
     # More serious logging level (2)
     def warn(self, msg, endl="\n"):
         if(self.level >= 1):
-            print("[WARN][" + __ftime__() + "] " + msg, end=endl)
+            try:
+                print("[WARN][" + __ftime__() + "] " + msg, end=endl)
+            except:
+                print("[WARN][" + __ftime__() + "] " + dumps(msg), end=endl)
+
 
     # Most serious recoverable logging level (3)
     def error(self, msg, endl="\n"):
         if(self.level >= 2):
-            print("[ERROR][" + __ftime__() + "] " + msg, end=endl)
+            try:
+                print("[ERROR][" + __ftime__() + "] " + msg, end=endl)
+            except:
+                print("[ERROR][" + __ftime__() + "] " + dumps(msg), end=endl)
+
 
     # Exits after execution. Optional cleanup method.
     def fatal(self, msg, methodCleanup = "", endl="\n"):
         if(self.level >=0):
-            print("[FATAL][" + __ftime__() + "] " + msg, end=endl)
+            try:
+                print("[FATAL][" + __ftime__() + "] " + msg, end=endl)
+            except:
+                print("[FATAL][" + __ftime__() + "] " + dumps(msg), end=endl)
+
+
             try: exec(methodCleanup) # This should not be here, use something else.
             except: pass
             exit()
@@ -62,7 +79,11 @@ class logger:
     # should not be used. Instead, see error.
     def fatals(self, msg, endl="\n"):
         if(self.level >= 0):
-            print("[FATAL][" + __ftime__() + "] " + msg, end=endl)
+            try:
+                print("[FATAL][" + __ftime__() + "] " + msg, end=endl)
+            except:
+                print("[FATAL][" + __ftime__() + "] " + dumps(msg), end=endl)
+
             print("Continuing...")
 
     # internal logger. This should be used by modules only.
