@@ -1,14 +1,17 @@
 # PYDIR
-### Generate static HTML pages for directory listings.
+
+## Generate static HTML pages for directory listings.
+
 This Python Script will scan a given directory and all it contains, recursively, and within each of those directories (including the root) create a directory listing HTML page that not only looks nice but is completely static, removing the need for often bandwidth-intensive client-side handlers. Not only that, but it also has support for custom styles, so no more of those ugly default Apache directory listings.
 
+It first will compile HTML for the folders, then takes file names and calculates file sizes for their listings. It lists in alphabetical order by default.
+
 # Usage
-`python3 app.py /path/to/root/working/directory/`
-You may use `.` or any relative naming to describe the directory.
-Please note that the program will write files to the chosen directory.
-Also note that the `include` folder will be copied in it's entirety to the root directory of the target. (not implemented)
+
+`python3 app.py /path/to/root/working/directory/` You may use `.` or any relative naming to describe the directory. Please note that the program will write files to the chosen directory. Also note that the `include` folder will be copied in its entirety to the root directory of the target. (only implemented for linux)
 
 # Configuration
+
 Edit cfg.py to modify user options.
 
 # License and Attribution
