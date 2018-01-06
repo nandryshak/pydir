@@ -8,7 +8,7 @@ It first will compile HTML for the folders, then takes file names and calculates
 
 # Usage
 
-`python3 app.py /path/to/root/working/directory/` You may use `.` or any relative naming to describe the directory. Please note that the program will write files to the chosen directory. Also note that the `include` folder will be copied in its entirety to the root directory of the target. (only implemented for linux)
+`python3 app.py /path/to/root/working/directory/` You may use `.` or any relative naming to describe the directory. Please note that the program will write files to the chosen directory. Also note that the `include` folder will be copied in its entirety to the root directory of the target. (Currently only implemented for Linux)
 
 # Configuration
 
