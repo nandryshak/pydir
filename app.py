@@ -16,6 +16,7 @@ console = debug.logger(level=0) # What kinds of messages to log. See logging mod
 
 _ITEMTEMPLATE = open("rsc/item-template.html").read() # What HTML to duplicate and fill for each file/dir
 _THEME = open("rsc/theme.html").read() # This is the html that should enclose the $content$
+_STYLESHEET = open("rsc/stylesheet.html").read() # This stylesheet will be placed in the <head> section of the final HTML
 
 
 # Misc Utilities
