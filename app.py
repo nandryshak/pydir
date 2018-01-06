@@ -12,7 +12,7 @@ See rsc/stylesheet.html for the default css classes used in generation.
 # Python Builtins
 import os
 import sys
-from json import dumps
+# from json import dumps # Mostly used for debugging
 from time import clock
 
 # Custom Modules (found in ./lib )
@@ -28,7 +28,6 @@ try: _ROOTDIR = cfg._ROOTDIR
 except: pass
 
 # Assign the CFG Vars locally.
-console.log("Assigning config values from `cfg.py` locally...", endl=" ")
 _EXCLUDES = cfg._EXCLUDES # Exclude matching files or folders from program operation
 _DIRFILENAME = cfg._DIRFILENAME # What should the directory html file be called?
 _DOMAIN = cfg._DOMAIN
@@ -111,7 +110,8 @@ for root, dirs, files in os.walk("."):
         tmp = tmp.replace("$filename$", item)
 
         # Handle Filesizes
-        fileSize = len(open(root + "/" + item, "rb").read()) #File size is the length of all the bytes of the file.
+        fileSize = int(os.popen("du -b " + '"' + root + "/" + item + '"').read().split("\t")[0]) # Temp until better way of checking is found
+        #fileSize = len(open(root + "/" + item, "rb").read()) #File size is the length of all the bytes of the file.
 
         if fileSize >= 1000000000000: # More than a trillion bytes means it's in terabytes.
             fileSize = round((fileSize / 1000000000000), 2) # convert to terabytes
