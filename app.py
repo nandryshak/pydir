@@ -105,6 +105,25 @@ for root, dirs, files in os.walk("."):
     # Theme Variable Insertion here
     fileText = fileText.replace("$root-dir$", root.strip("./"))
     fileText = fileText.replace("$stylesheet$", _STYLESHEET)
+    # => Handle the Breadcrumbs
+    path = root.split("/")
+    breadCrumb = ""
+    crumbItem = '<a href="$addr$">$name$/</a>'
+
+    for crumb in path:
+        if crumb == ".":
+            breadCrumb += crumbItem.replace("$name$", "root")
+        else:
+            breadCrumb += crumbItem.replace("$name$", crumb.strip("./"))
+
+        if path == ["."]:
+            crumbAddr = '#'
+        else:
+            crumbAddr = ('../' * (len(path)-(path.index(crumb)+1)))
+            crumbAddr += './'
+        breadCrumb = breadCrumb.replace("$addr$", crumbAddr)
+
+    fileText = fileText.replace("$breadcrumb$", breadCrumb) # write composed breadcrumb to file.
 
     # Write the composed HTML to a file.
     dirFile.write(fileText)
