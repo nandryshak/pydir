@@ -10,8 +10,8 @@ See rsc/stylesheet.html for the default css classes used in generation.
 """
 
 # Python Builtins
-import sys
 import os
+import sys
 from json import dumps
 from time import clock
 
@@ -19,15 +19,23 @@ from time import clock
 import lib.debug as debug
 
 ''' Set up runtime variables and configuration values. '''
-_EXCLUDES = ["lib", "app.py", "rsc"] # Exclude certain files or folders from program operation
 _ROOTDIR = sys.argv[1] # The root working directory is specified as the first cli arg.
-_DIRFILENAME = "directory.html" # What should the directory html file be called?
-console = debug.logger(level=0) # -1 for none, 0 for info, 1 for warning, 2 for errors, 3 for verbose.
+import cfg # Import the config file
+console = debug.logger(level=cfg._LOGLEVEL) # Init log level before anything essential happens.
 
-_ITEMTEMPLATE = open("rsc/item-template.html").read() # What HTML to duplicate and fill for each file/dir
-_THEME = open("rsc/theme.html").read() # This is the html that should enclose the $content$
-_STYLESHEET = open("rsc/stylesheet.html").read() # This stylesheet will be placed in the <head> section of the final HTML
+# Handle in case cfg.py does not contain cfg._ROOTDIR
+try: _ROOTDIR = cfg._ROOTDIR
+except: pass
 
+# Assign the CFG Vars locally.
+console.log("Assigning config values from `cfg.py` locally.")
+_EXCLUDES = cfg._EXCLUDES # Exclude matching files or folders from program operation
+_DIRFILENAME = cfg._DIRFILENAME # What should the directory html file be called?
+
+_ITEMTEMPLATE = cfg._ITEMTEMPLATE # What HTML to duplicate and fill for each file/dir
+_THEME = cfg._THEME # This is the html that should enclose the $content$
+_STYLESHEET = cfg._STYLESHEET # This stylesheet will be placed in the <head> section of the final HTML
+console.log("Done")
 
 # Misc Utilities
 def stub():
