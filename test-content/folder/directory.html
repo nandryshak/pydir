@@ -28,7 +28,17 @@
 
   .breadcrumb {
     padding-bottom: 30px;
-    margin-bottom: 10px;
+    padding-left: 20px;
+  }
+
+  .breadcrumb a {
+    color: blue;
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    color: blue;
+    text-decoration: underline;
   }
 
   div.directory-item {
@@ -64,16 +74,16 @@
     }
 
   div.file-icon {
-    background: url("../rsc/images/fallback/file.png") left top no-repeat;
+    background: url("/rsc/images/fallback/file.png") left top no-repeat;
 
   }
 
   div.dir-icon {
-    background: url("../rsc/images/fallback/folder.png") left top no-repeat;
+    background: url("/rsc/images/fallback/folder.png") left top no-repeat;
   }
 
   div.up-icon {
-    background: url("../rsc/images/fallback/folder-parent.png") left top no-repeat;
+    background: url("/rsc/images/fallback/folder-parent.png") left top no-repeat;
   }
 
   footer {
@@ -88,7 +98,7 @@
   </head>
   <body>
     <h1 class="title">Index of /folder</h1>
-    <h4 class="breadcrumb"><a href=".././">root/</a><a href="./">folder/</a></h4>
+    <h3 class="breadcrumb"><a href=".././">root/</a> <a href="./">folder/</a> </h3>
 
     <div class="directory-item" onclick="window.location.href='../'">
   <div class="icon up-icon"></div>
