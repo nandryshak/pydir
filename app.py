@@ -35,8 +35,6 @@ _ITEMTEMPLATE = cfg._ITEMTEMPLATE # What HTML to duplicate and fill for each fil
 _THEME = cfg._THEME # This is the html that should enclose the $content$
 _STYLESHEET = cfg._STYLESHEET # This stylesheet will be placed in the <head> section of the final HTML
 _ALPHAORDER = cfg._ALPHAORDER
-print("Done")
-
 
 
 '''# MAIN PROGRAM START #'''
