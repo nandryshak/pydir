@@ -6,6 +6,7 @@ This Python Script will scan a given directory and all it contains, recursively,
 `python3 app.py /path/to/root/working/directory/`
 You may use `.` or any relative naming to describe the directory.
 Please note that the program will write files to the chosen directory.
+Also note that the `include` folder will be copied in it's entirety to the root directory of the target. (not implemented)
 
 # Configuration
 Edit cfg.py to modify user options.
