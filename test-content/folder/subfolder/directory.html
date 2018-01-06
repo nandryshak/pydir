@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
 
-    <title>Web Directory</title>
+    <title>Index of /folder/subfolder</title>
 
     <!-- Bootstrap Stuff -->
     <link rel="stylesheet" href="#">
@@ -31,19 +31,21 @@
   div.directory-item {
     padding: 20px;
     padding-left: 25px;
-    background-color: #dddddd
+    background-color: #dddddd;
+    border-bottom: 1px solid white
+
   }
 
   div.directory-item:hover {
     padding-left: 30px;
-    background-color: #ededed
+    background-color: #ededed;
   }
 
   a.icon {
     -webkit-padding-start: 1.5em;
     text-decoration: none;
     color: black;
-    padding-bottom: 20px;
+    float: none;
   }
 
   a.icon:hover {
@@ -55,7 +57,8 @@
       float: left;
       padding: 20px;
       padding-right: 10px;
-  }
+
+    }
 
   div.file-icon {
     background: url("../rsc/images/fallback/file.png") left top no-repeat;
@@ -69,9 +72,16 @@
   div.up-icon {
     background: url("../rsc/images/fallback/folder-parent.png") left top no-repeat;
   }
+
+  footer {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: #cccccc;
+    color: black;
+  }
 </style>
 
-    
+
   </head>
   <body>
     <h1 class="title">Index of /folder/subfolder</h1>
@@ -90,7 +100,11 @@
 
     <div class="footer-container">
       <footer>
-
+        <center>
+          <small>Generated with <a href="http://github.com/montessquio/pydir">PyDir</a>, an open-source static directory page generator.</small>
+          <br />
+          <small>Made by Nicolas "Montessquio" Suarez</small>
+        </center>
       </footer>
     </div>
 
