@@ -28,14 +28,14 @@ try: _ROOTDIR = cfg._ROOTDIR
 except: pass
 
 # Assign the CFG Vars locally.
-console.log("Assigning config values from `cfg.py` locally.")
+console.log("Assigning config values from `cfg.py` locally...", endl=" ")
 _EXCLUDES = cfg._EXCLUDES # Exclude matching files or folders from program operation
 _DIRFILENAME = cfg._DIRFILENAME # What should the directory html file be called?
 
 _ITEMTEMPLATE = cfg._ITEMTEMPLATE # What HTML to duplicate and fill for each file/dir
 _THEME = cfg._THEME # This is the html that should enclose the $content$
 _STYLESHEET = cfg._STYLESHEET # This stylesheet will be placed in the <head> section of the final HTML
-console.log("Done")
+print("Done")
 
 # Misc Utilities
 def stub():
