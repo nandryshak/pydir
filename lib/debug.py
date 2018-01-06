@@ -15,39 +15,44 @@ class logger:
         self.log("Console Logging Initialised")
 
     # Standard Logging level (1)
-    def log(self, msg):
+    def log(self, msg, endl="\n"):
         if(self.level >= 0):
-            print("[INFO][" + ftime() + "] " + msg)
+            print("[INFO][" + __ftime__() + "] " + msg, end=endl)
 
     # More serious logging level (2)
-    def warn(self, msg):
+    def warn(self, msg, endl="\n"):
         if(self.level >= 1):
-            print("[WARN][" + ftime() + "] " + msg)
+            print("[WARN][" + __ftime__() + "] " + msg, end=endl)
 
     # Most serious recoverable logging level (3)
-    def error(self, msg):
+    def error(self, msg, endl="\n"):
         if(self.level >= 2):
-            print("[ERROR][" + ftime() + "] " + msg)
+            print("[ERROR][" + __ftime__() + "] " + msg, end=endl)
 
-    # Exits after
-    def fatal(self, msg):
+    # Exits after execution. Optional cleanup method.
+    def fatal(self, msg, methodCleanup = "", endl="\n"):
         if(self.level >=0):
-            print("[FATAL][" + ftime() + "] " + msg)
+            print("[FATAL][" + __ftime__() + "] " + msg, end=endl)
+            try: exec(methodCleanup) # This should not be here, use something else.
+            except: pass
             exit()
 
     # fatals(afe) does not exit after giving a message.
     # should not be used. Instead, see error.
-    def fatals(self, msg):
+    def fatals(self, msg, endl="\n"):
         if(self.level >= 0):
-            print("[FATAL][" + ftime() + "] " + msg)
+            print("[FATAL][" + __ftime__() + "] " + msg, end=endl)
             print("Continuing...")
 
     # internal logger. This should be used by modules only.
-    def ilog(self, calling_module, msg):
+    def ilog(self, calling_module, msg, endl="\n"):
         pass #Stub
 
 # Internal Functions
 # Internal function for getting the current time string (formatted)
 # Format is HH:MM:SS
-def ftime():
+def __ftime__():
     return ':'.join([str(gmtime().tm_hour), str(gmtime().tm_min), str(gmtime().tm_sec)])
+
+def __nop__():
+    pass
