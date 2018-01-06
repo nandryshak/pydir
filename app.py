@@ -35,6 +35,7 @@ _DIRFILENAME = cfg._DIRFILENAME # What should the directory html file be called?
 _ITEMTEMPLATE = cfg._ITEMTEMPLATE # What HTML to duplicate and fill for each file/dir
 _THEME = cfg._THEME # This is the html that should enclose the $content$
 _STYLESHEET = cfg._STYLESHEET # This stylesheet will be placed in the <head> section of the final HTML
+_ALPHAORDER = cfg._ALPHAORDER
 print("Done")
 
 # Misc Utilities
@@ -69,6 +70,7 @@ for root, dirs, files in os.walk("."):
         if item.endswith(".html"):
             files.remove(item)
 
+
     # Now traverse files and folders in the current root and add them, through the template, to directory.html
     fileText = "" # Begin with an empty string.
     fileCount = 0 # Keep track of how many entries are in this particular directory.
@@ -82,6 +84,9 @@ for root, dirs, files in os.walk("."):
     fileText += tmp
     fileText += "\n"
 
+    # Sort the files and folders into alphabetical order if the option is enabled.
+    if _ALPHAORDER:
+        dirs.sort()
     for item in dirs: # First add the dirs
         tmp = _ITEMTEMPLATE.replace("$class$", 'icon')
         tmp = tmp.replace("$item-type$", 'icon dir-icon')# icon-type is dir.
@@ -91,6 +96,8 @@ for root, dirs, files in os.walk("."):
         fileText += "\n"
         dirCount += 1
 
+    if _ALPHAORDER:
+        files.sort()
     for item in files: # Second add the files
         tmp = _ITEMTEMPLATE.replace("$class$", 'icon file')
         tmp = tmp.replace("$item-type$", 'icon file-icon') # icon-type is file.
@@ -105,10 +112,11 @@ for root, dirs, files in os.walk("."):
     # Theme Variable Insertion here
     fileText = fileText.replace("$root-dir$", root.strip("./"))
     fileText = fileText.replace("$stylesheet$", _STYLESHEET)
+
     # => Handle the Breadcrumbs
     path = root.split("/")
     breadCrumb = ""
-    crumbItem = '<a href="$addr$">$name$/</a>'
+    crumbItem = '<a href="$addr$">$name$/</a> '
 
     for crumb in path:
         if crumb == ".":
