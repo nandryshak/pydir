@@ -39,9 +39,6 @@ _ALPHAORDER = cfg._ALPHAORDER
 
 '''# MAIN PROGRAM START #'''
 
-console.log("Copying ./include to " + _ROOTDIR + "include")
-os.system("cp -r include/ " + _ROOTDIR)
-
 os.chdir(_ROOTDIR) # Switch to specified working directory.
 console.log("Working directory is now " + _ROOTDIR)
 # Get directory tree based on first argument
