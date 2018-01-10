@@ -17,4 +17,3 @@ _LOGLEVEL = 2 # Console debug log level. -1 for none, 0 for info, 1 for warning,
 #vvv# These should generally not be modified unless you know what you're doing. #vvv#'''
 _ITEMTEMPLATE = open("rsc/item-template.html").read() # What HTML to duplicate and fill for each file/dir
 _THEME = open("rsc/theme.html").read() # This is the html that should enclose the $content$
-_STYLESHEET = open("rsc/stylesheet.html").read() # This stylesheet will be placed in the <head> section of the final HTML

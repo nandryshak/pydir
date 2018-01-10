@@ -12,7 +12,7 @@ See rsc/stylesheet.html for the default css classes used in generation.
 # Python Builtins
 import os
 import sys
-# from json import dumps # Mostly used for debugging
+from json import dumps # Mostly used for debugging
 from time import clock
 
 # Custom Modules (found in ./lib )
@@ -33,14 +33,40 @@ _DIRFILENAME = cfg._DIRFILENAME # What should the directory html file be called?
 _DOMAIN = cfg._DOMAIN
 _ITEMTEMPLATE = cfg._ITEMTEMPLATE # What HTML to duplicate and fill for each file/dir
 _THEME = cfg._THEME # This is the html that should enclose the $content$
-_STYLESHEET = cfg._STYLESHEET # This stylesheet will be placed in the <head> section of the final HTML
 _ALPHAORDER = cfg._ALPHAORDER
 
+# Misc utils
+
+# Thanks to https://stackoverflow.com/questions/9727673/list-directory-tree-structure-in-python
+def dirtree(startpath):
+    l = []
+    for root, dirs, files in os.walk(startpath):
+        level = root.replace(startpath, '').count(os.sep)
+        for item in _EXCLUDES:
+            try:
+                dirs.remove(item)
+            except:
+                try:
+                    files.remove(item)
+                except:
+                    pass
+        if root not in _EXCLUDES:
+            l.append((os.path.basename(root), level))
+            return(l)
 
 '''# MAIN PROGRAM START #'''
 
+console.log("Copying ./include to " + _ROOTDIR + "/include")
+os.system("cp -r include/ " + _ROOTDIR)
+
 os.chdir(_ROOTDIR) # Switch to specified working directory.
 console.log("Working directory is now " + _ROOTDIR)
+
+# Build dir tree and sidenav (only needs to be done once but is used in every page.)
+# the `sidenav` variable contents are inserted into the page
+nav_item = '<li class="nav-item"><a class="nav-link" href="#">$name$</a></li>'
+sidenav = nav_item
+
 # Get directory tree based on first argument
 console.log("Beginning directory traversal...")
 __STARTTIME__ = clock()
@@ -73,7 +99,7 @@ for root, dirs, files in os.walk("."):
     dirCount = 0
 
     # Add the "../" directory.
-    tmp = _ITEMTEMPLATE.replace("$class$", 'icon') # icon-type is up (dir up)
+    tmp = _ITEMTEMPLATE.replace("$class$", 'icon no-sort') # icon-type is up (dir up)
     tmp = tmp.replace("$item-type$", 'icon up-icon')
     tmp = tmp.replace("$file-href$", "../")
     tmp = tmp.replace("$filename$", "Parent Directory")
@@ -111,18 +137,18 @@ for root, dirs, files in os.walk("."):
 
         if fileSize >= 1000000000000: # More than a trillion bytes means it's in terabytes.
             fileSize = round((fileSize / 1000000000000), 2) # convert to terabytes
-            fileSize = str(fileSize) + "TB"
+            fileSize = str(fileSize) + " TB"
         elif fileSize >= 1000000000: # More than a billion means it's in gigabytes.
             fileSize = round((fileSize / 1000000000), 2) # convert to gigabytes
-            fileSize = str(fileSize) + "GB"
+            fileSize = str(fileSize) + " GB"
         elif fileSize >= 1000000: # More than a million means it's in megabytes.
             fileSize = round((fileSize / 1000000), 2) # convert to megabytes
-            fileSize = str(fileSize) + "MB"
+            fileSize = str(fileSize) + " MB"
         elif fileSize >= 1000: # More than a thousand means it's in kilobytes.
             fileSize = round((fileSize / 1000), 2) # convert to kb
-            fileSize = str(fileSize) + "KB"
+            fileSize = str(fileSize) + " KB"
         else: #Anything below is in bytes.
-            fileSize = str(fileSize) + "B"
+            fileSize = str(fileSize) + " B"
 
         # Add in the converted statistic
         tmp = tmp.replace("$filesize$", str(fileSize))
@@ -136,21 +162,22 @@ for root, dirs, files in os.walk("."):
 
     # Theme Variable Insertion here
     fileText = fileText.replace("$root-dir$", root.strip("./"))
-    fileText = fileText.replace("$stylesheet$", _STYLESHEET)
     fileText = fileText.replace("$domain$", _DOMAIN)
 
     # => Handle the Breadcrumbs
     path = root.split("/")
     breadCrumb = ""
-    crumbItem = '<a href="$addr$">$name$/</a> '
-
-
+    crumbSep = '<a class="" href="#"> > </a>'
+    crumbItem = '<a class="" href="$addr$">$name$</a>'
     for crumb in path:
+
+        # First do crumbname
         if crumb == ".":
-            breadCrumb += crumbItem.replace("$name$", _DOMAIN)
+            breadCrumb += crumbItem.replace("$name$", "")
         else:
             breadCrumb += crumbItem.replace("$name$", crumb.strip("./"))
 
+        # Then crumb's link address
         if path == ["."]:
             crumbAddr = '#'
         else:
@@ -158,7 +185,15 @@ for root, dirs, files in os.walk("."):
             crumbAddr += './'
         breadCrumb = breadCrumb.replace("$addr$", crumbAddr)
 
+        # If is not last item in list, append >
+        if crumb != path[-1]:
+            breadCrumb += crumbSep
+
     fileText = fileText.replace("$breadcrumb$", breadCrumb) # write composed breadcrumb to file.
+
+    # Set sidenav dir tree
+    fileText = fileText.replace("$sidenav$", sidenav)
+
 
     # Write the composed HTML to a file.
     dirFile.write("")
