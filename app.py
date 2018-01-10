@@ -167,10 +167,9 @@ for root, dirs, files in os.walk("."):
     # => Handle the Breadcrumbs
     path = root.split("/")
     breadCrumb = ""
-    crumbSep = '<a class="" href="#"> > </a>'
-    crumbItem = '<a class="" href="$addr$">$name$</a>'
+    crumbSep = '<a class="smaller" href="#"> > </a>'
+    crumbItem = '<a class="smaller" href="$addr$">$name$</a>'
     for crumb in path:
-
         # First do crumbname
         if crumb == ".":
             breadCrumb += crumbItem.replace("$name$", "")
