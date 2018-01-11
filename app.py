@@ -182,20 +182,7 @@ for root, dirs, files in os.walk("."):
             console.warn("DU is either not installed or erroring. It is reccomended to have DU installed on your system; the backup method is very slow.")
             fileSize = len(open(root + "/" + item, "rb").read()) #File size is the length of all the bytes of the file. SLOW
 
-        if fileSize >= 1000000000000: # More than a trillion bytes means it's in terabytes.
-            fileSize = round((fileSize / 1000000000000), 2) # convert to terabytes
-            fileSize = str(fileSize) + " TB"
-        elif fileSize >= 1000000000: # More than a billion means it's in gigabytes.
-            fileSize = round((fileSize / 1000000000), 2) # convert to gigabytes
-            fileSize = str(fileSize) + " GB"
-        elif fileSize >= 1000000: # More than a million means it's in megabytes.
-            fileSize = round((fileSize / 1000000), 2) # convert to megabytes
-            fileSize = str(fileSize) + " MB"
-        elif fileSize >= 1000: # More than a thousand means it's in kilobytes.
-            fileSize = round((fileSize / 1000), 2) # convert to kb
-            fileSize = str(fileSize) + " KB"
-        else: #Anything below is in bytes.
-            fileSize = str(fileSize) + " B"
+        fileSize = fileSizeCount(fileSize)
 
         # Add in the converted statistic
         tmp = tmp.replace("$filesize$", str(fileSize))
