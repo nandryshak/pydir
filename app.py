@@ -145,8 +145,22 @@ for root, dirs, files in os.walk("."):
         tmp = tmp.replace("$item-type$", 'icon dir-icon')# icon-type is dir.
         tmp = tmp.replace("$file-href$", ("." + "/" + item)) # subdirs are in "this" dir so it can be ./<file>
         tmp = tmp.replace("$filename$", item)
-        tmp = tmp.replace("$filesize$", "")
+
+        # Handle Filesizes
+        try: # Preferred method, as it is very fast.
+            #fileSize = int(os.popen("du -bcks " + '"' + root + "/" + item + '"').read().split("\t")[0])
+            fileSize = get_size(root + "/" + item)
+            fileSize = fileSizeCount(fileSize)
+        except: # Failure likely means DU is not installed on the system, therefore we should use the slow method.
+            console.warn("DU is either not installed or erroring. It is reccomended to have DU installed on your system; the backup method is very slow.")
+            console.warn("Folder size is not supported without DU")
+            fileSize = ""
+
+        # Add in the converted statistic
+        tmp = tmp.replace("$filesize$", str(fileSize))
+
         tmp = tmp.replace("$last-modified$", datetime.fromtimestamp( int( os.path.getmtime(root+"/"+item) ) ).strftime('%Y-%m-%d %H:%M:%S'))
+
         fileText += tmp
         fileText += "\n"
         dirCount += 1
