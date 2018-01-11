@@ -14,6 +14,14 @@
 
 .listing-table {
   width: 100vw;
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+}
+
+.listing-table thead {
+  background-color: white;
+  border-top: 0
 }
 
 .listing-item {
@@ -81,4 +89,16 @@ footer a:visited {
 
 .breadcrumb-item {
   padding-left: 20px;
+
+}
+
+.smaller {
+  font-size: 0.9em;
+}
+
+.heading {
+  background-color: #fafafa;
+  padding: 0.8rem;
+  margin: 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
 }

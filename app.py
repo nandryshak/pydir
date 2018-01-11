@@ -14,6 +14,7 @@ import os
 import sys
 from json import dumps # Mostly used for debugging
 from time import clock
+from datetime import datetime
 
 # Custom Modules (found in ./lib )
 import lib.debug as debug
@@ -104,6 +105,7 @@ for root, dirs, files in os.walk("."):
     tmp = tmp.replace("$file-href$", "../")
     tmp = tmp.replace("$filename$", "Parent Directory")
     tmp = tmp.replace("$filesize$", "")
+    tmp = tmp.replace("$last-modified$", "")
     fileText += tmp
     fileText += "\n"
 
@@ -116,6 +118,7 @@ for root, dirs, files in os.walk("."):
         tmp = tmp.replace("$file-href$", ("." + "/" + item)) # subdirs are in "this" dir so it can be ./<file>
         tmp = tmp.replace("$filename$", item)
         tmp = tmp.replace("$filesize$", "")
+        tmp = tmp.replace("$last-modified$", datetime.fromtimestamp( int( os.path.getmtime(root+"/"+item) ) ).strftime('%Y-%m-%d %H:%M:%S'))
         fileText += tmp
         fileText += "\n"
         dirCount += 1
@@ -127,6 +130,7 @@ for root, dirs, files in os.walk("."):
         tmp = tmp.replace("$item-type$", 'icon file-icon') # icon-type is file.
         tmp = tmp.replace("$file-href$", ("." + "/" + item)) # files are in "this" dir so it can be ./<file>
         tmp = tmp.replace("$filename$", item)
+        tmp = tmp.replace("$last-modified$", datetime.fromtimestamp( int( os.path.getmtime(root+"/"+item) ) ).strftime('%Y-%m-%d %H:%M:%S'))
 
         # Handle Filesizes
         try: # Preferred method, as it is very fast.
