@@ -93,8 +93,8 @@ console.log("Working directory is now " + _ROOTDIR)
 
 # Build dir tree and sidenav (only needs to be done once but is used in every page.)
 # the `sidenav` variable contents are inserted into the page
-nav_item = '<li class="nav-item"><a class="nav-link" href="#">$name$</a></li>'
-sidenav = nav_item
+#nav_item = '<li class="nav-item"><a class="nav-link" href="#">$name$</a></li>'
+#sidenav = nav_item
 
 # Get directory tree based on first argument
 console.log("Beginning directory traversal...")
@@ -225,7 +225,7 @@ for root, dirs, files in os.walk("."):
     fileText = fileText.replace("$breadcrumb$", breadCrumb) # write composed breadcrumb to file.
 
     # Set sidenav dir tree
-    fileText = fileText.replace("$sidenav$", sidenav)
+    #fileText = fileText.replace("$sidenav$", sidenav)
 
 
     # Write the composed HTML to a file.
