@@ -55,6 +55,24 @@ def dirtree(startpath):
             l.append((os.path.basename(root), level))
             return(l)
 
+# Convert byte count to size string
+def fileSizeCount(fileSize):
+    if fileSize >= 1000000000000: # More than a trillion bytes means it's in terabytes.
+        fileSize = round((fileSize / 1000000000000), 2) # convert to terabytes
+        fileSize = str(fileSize) + " TB"
+    elif fileSize >= 1000000000: # More than a billion means it's in gigabytes.
+        fileSize = round((fileSize / 1000000000), 2) # convert to gigabytes
+        fileSize = str(fileSize) + " GB"
+    elif fileSize >= 1000000: # More than a million means it's in megabytes.
+        fileSize = round((fileSize / 1000000), 2) # convert to megabytes
+        fileSize = str(fileSize) + " MB"
+    elif fileSize >= 1000: # More than a thousand means it's in kilobytes.
+        fileSize = round((fileSize / 1000), 2) # convert to kb
+        fileSize = str(fileSize) + " KB"
+    else: #Anything below is in bytes.
+        fileSize = str(fileSize) + " B"
+    return fileSize
+
 '''# MAIN PROGRAM START #'''
 
 console.log("Copying ./include to " + _ROOTDIR + "/include")
@@ -125,6 +143,7 @@ for root, dirs, files in os.walk("."):
 
     if _ALPHAORDER:
         files.sort()
+
     for item in files: # Second add the files
         tmp = _ITEMTEMPLATE.replace("$class$", 'icon file')
         tmp = tmp.replace("$item-type$", 'icon file-icon') # icon-type is file.
