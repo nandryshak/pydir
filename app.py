@@ -12,7 +12,7 @@ See rsc/stylesheet.html for the default css classes used in generation.
 # Python Builtins
 import os
 import sys
-from json import dumps # Mostly used for debugging
+import json # Mostly used for debugging
 from time import clock
 from datetime import datetime
 
@@ -39,6 +39,7 @@ _ALPHAORDER = cfg._ALPHAORDER
 # Misc utils
 
 # Thanks to https://stackoverflow.com/questions/9727673/list-directory-tree-structure-in-python
+'''
 def dirtree(startpath):
     l = []
     for root, dirs, files in os.walk(startpath):
@@ -54,6 +55,26 @@ def dirtree(startpath):
         if root not in _EXCLUDES:
             l.append((os.path.basename(root), level))
             return(l)
+'''
+
+
+# Recursive directory tree to JSON converter with excludes support.
+# Modified version of https://unix.stackexchange.com/questions/164602/how-to-output-the-directory-structure-to-json-format
+def dirTree(path):
+    if os.path.isdir(path):  # If it's a directory
+        d = {'name': os.path.basename(path)}
+        d['type'] = "directory"
+        d['children'] = []
+
+        for x in os.listdir(path): # Loop through all subfolders/files and recursively delve into subfolders as well.
+            if x not in _EXCLUDES: # Make sure folder is allowed based on _EXCLUDES
+                d['children'] += [ dirTree(os.path.join(path,x)) ]
+    else: # if it's not a directory it's a file
+        if os.path.basename(path) not in _EXCLUDES: # Make sure it's allowed based on _EXCLUDES
+            d = {'name': os.path.basename(path)}
+            d['type'] = "file"
+    return d
+
 
 # Convert byte count to size string
 def fileSizeCount(fileSize):
@@ -73,7 +94,7 @@ def fileSizeCount(fileSize):
         fileSize = str(fileSize) + " B"
     return fileSize
 
-
+# Get the size of a given file or folder.
 def get_size(start_path = '.'):
     total_size = 0
     for dirpath, dirnames, filenames in os.walk(start_path):
@@ -91,10 +112,15 @@ os.system("cp -r include/ " + _ROOTDIR)
 os.chdir(_ROOTDIR) # Switch to specified working directory.
 console.log("Working directory is now " + _ROOTDIR)
 
-# Build dir tree and sidenav (only needs to be done once but is used in every page.)
-# the `sidenav` variable contents are inserted into the page
-#nav_item = '<li class="nav-item"><a class="nav-link" href="#">$name$</a></li>'
-#sidenav = nav_item
+# Build the dirtree into a JSON object.
+try:
+    __DIRSTARTTIME__ = clock() # TIme the operation
+
+    _DIRTREE = dirTree(".")
+    console.log("Completed directory tree JSON generation in " + str(round(((clock() - __DIRSTARTTIME__)*1000), 3)) + "ms")
+except:
+    console.warn("Could not complete directory tree JSON generation due to an unknown error. Substituting an empty dictionary instead.")
+    _DIRTREE = {}
 
 # Get directory tree based on first argument
 console.log("Beginning directory traversal...")
