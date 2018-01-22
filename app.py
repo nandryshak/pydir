@@ -254,6 +254,13 @@ for root, dirs, files in os.walk("."):
     #fileText = fileText.replace("$sidenav$", sidenav)
 
 
+    # Set dynamic folder refs.
+    rootStep = "."
+    for item in root.split("/")[1:]:
+        rootStep += "/.."
+    fileText = fileText.replace("$root-step$", rootStep)
+
+
     # Write the composed HTML to a file.
     dirFile.write("")
     dirFile.write(fileText)
