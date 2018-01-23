@@ -23,6 +23,8 @@ No significant benchmarking has been done, but it handles both many files in a s
 A ~65GB ebooks folder with ~10k loose files scanned completely in 10797.786ms, and a 129GB folder with ~15k files organized meticulously by category finished scanning in 13132.954ms. Suffice to say it makes pretty good time regardless of your needs.
 Additionally, it uses the unix utility `du` to scan for file size. Therefore it never has to actually open the file and determine it's size, allowing for files of any size to be scanned. If `du` is not available for any reason, it will default to the universal, albeit slow, python method of opening files. It is reccomended to have `du` installed on your system.
 
+# Examples
+See an example page listing (may not always be up to date) at [static.dnd.guide](https://static.dnd.guide)
 # License and Attribution
 
 Additionally, there is an attribution in the footer of the default template. Feel free to edit or remove it, but it would be appreciated if it were left in.
