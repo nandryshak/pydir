@@ -207,8 +207,9 @@ for root, dirs, files in os.walk("."):
         # Handle Filesizes
         try: # Preferred method, as it is very fast.
             fileSize = int(os.popen("du -b " + '"' + root + "/" + item + '"').read().split("\t")[0])
-        except: # Failure likely means DU is not installed on the system, therefore we should use the slow method.
+        except Exception as e: # Failure likely means DU is not installed on the system, therefore we should use the slow method.
             console.warn("DU is either not installed or erroring. It is reccomended to have DU installed on your system; the backup method is very slow.")
+            console.warn("Error Code: " + str(e))
             fileSize = len(open(root + "/" + item, "rb").read()) #File size is the length of all the bytes of the file. SLOW
 
         fileSize = fileSizeCount(fileSize)
@@ -265,8 +266,12 @@ for root, dirs, files in os.walk("."):
 
 
     # Write the composed HTML to a file.
-    dirFile.write("")
-    dirFile.write(fileText)
+    try:
+        dirFile.write("")
+        dirFile.write(fileText)
+    except Exception as e:
+        console.warn("There was an unhandled error while writing the directory \"" + root + "\"...")
+        console.warn("Exception information: " + str(e))
     console.log("Generated entries for " + str(dirCount) + " directories and " + str(fileCount) + " files in folder /" + root.strip("./") + ". Took " + str(round(((clock() - __DIRSTARTTIME__)*1000), 3)) + "ms")
     # print(fileText)
 console.log("Done. Took " + str(round(((clock() - __STARTTIME__)*1000), 3)) + "ms")
