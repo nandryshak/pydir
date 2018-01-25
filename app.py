@@ -209,7 +209,7 @@ for root, dirs, files in os.walk("."):
             fileSize = int(os.popen("du -b " + '"' + root + "/" + item + '"').read().split("\t")[0])
         except Exception as e: # Failure likely means DU is not installed on the system, therefore we should use the slow method.
             console.warn("DU is either not installed or erroring. It is reccomended to have DU installed on your system; the backup method is very slow.")
-            console.warn("Exception in file: " + item + " Is error : " + str(e))
+            console.warn("Exception in file: " + root + "/" + item + " Is error :    " + str(e))
             fileSize = len(open(root + "/" + item, "rb").read()) #File size is the length of all the bytes of the file. SLOW
 
         fileSize = fileSizeCount(fileSize)
