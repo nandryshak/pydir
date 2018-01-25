@@ -120,8 +120,9 @@ try:
     with open('include/tree.json', 'a') as jsonFile:  # Write directory tree information in the include folder as tree.json
         jsonFile.write(json.dumps(_DIRTREE))
     console.log("Completed directory tree JSON generation in " + str(round(((clock() - __DIRSTARTTIME__)*1000), 3)) + "ms")
-except:
+except Exception as e:
     console.warn("Could not complete directory tree JSON generation due to an unknown error. Substituting an empty dictionary instead.")
+    console.warn("Error Information: " + str(e))
     _DIRTREE = {}
 
 # Get directory tree based on first argument
