@@ -12,6 +12,20 @@
   background-position: center;
 }
 
+.list-collapsed-icon {
+  background: url("/include/images/tree-indicator.svg") left top no-repeat;
+  background-position: center left 5px;
+}
+
+.list-expanded-icon {
+  background: url("/include/images/sort.svg") left top no-repeat;
+  background-position: center left 5px;
+}
+
+.pure-menu-link {
+  margin-left: 20px;
+}
+
 .listing-table {
   width: 100vw;
   border-left: 0;
@@ -101,4 +115,41 @@ footer a:visited {
   padding: 0.8rem;
   margin: 0;
   border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.search-right {
+  float: right;
+  padding-right: 10px;
+  display: flex;
+}
+
+.search-icon {
+  background: url("/include/images/search.svg") left top no-repeat;
+  background-position: center;
+  padding-left: 50px;
+  display: inline;
+  background-size: 40%;
+  height: 100%;
+}
+
+.search-icon:hover {
+    background: url("/include/images/search.svg") left top no-repeat;
+    background-position: center;
+    padding-left: 50px;
+    display: inline;
+    background-size: 40%;
+    height: 100%;
+}
+
+.search-icon:active {
+    background: url("/include/images/search.svg") left top no-repeat;
+    background-position: center;
+    padding-left: 50px;
+    display: inline;
+    background-size: 40%;
+    height: 100%;
+}
+
+.search-content {
+
 }
