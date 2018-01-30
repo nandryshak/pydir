@@ -70,10 +70,16 @@ def dirTree(path):
             if x not in _EXCLUDES: # Make sure folder is allowed based on _EXCLUDES
                 d['children'] += [ dirTree(os.path.join(path,x)) ]
     else: # if it's not a directory it's a file
-        if os.path.basename(path) not in _EXCLUDES: # Make sure it's allowed based on _EXCLUDES
-            d = {'name': os.path.basename(path)}
-            d['type'] = "file"
-    return d
+        #if os.path.basename(path) not in _EXCLUDES: # Make sure it's allowed based on _EXCLUDES
+        #    d = {'name': os.path.basename(path)}
+        #    d['type'] = "file"
+
+        # Files should be ignored since the tree is *only* for the sidebar.
+        pass
+    try:
+        return d
+    except:
+        return
 
 
 # Convert byte count to size string
@@ -117,8 +123,8 @@ try:
     __DIRSTARTTIME__ = clock() # TIme the operation
 
     _DIRTREE = dirTree(".")
-    with open('include/tree.json', 'a') as jsonFile:  # Write directory tree information in the include folder as tree.json
-        jsonFile.write(json.dumps(_DIRTREE))
+    with open('include/tree.json', 'w') as jsonFile:  # Write directory tree information in the include folder as tree.json
+        jsonFile.write(json.dumps(_DIRTREE).replace('\x00', '').replace(" null,", '').replace(' null', '').replace("null,", ''))
     console.log("Completed directory tree JSON generation in " + str(round(((clock() - __DIRSTARTTIME__)*1000), 3)) + "ms")
 except Exception as e:
     console.warn("Could not complete directory tree JSON generation due to an unknown error. Substituting an empty dictionary instead.")
@@ -269,6 +275,13 @@ for root, dirs, files in os.walk("."):
     try:
         dirFile.write("")
         dirFile.write(fileText)
+
+        # also add root-step substitution into the CSS files.
+        with open('include/css/main.css', 'r') as f:  # Write directory tree information in the include folder as tree.json
+            ftext = f.read()
+        with open('include/css/main.css', 'w') as f:
+            f.write(ftext.replace('$root-step$', rootStep))
+
     except Exception as e:
         console.warn("There was an unhandled error while writing the directory \"" + root + "\"...")
         console.warn("Exception information: " + str(e))
