@@ -60,3 +60,23 @@ function displaySearchResults(results, store) {
     searchResults.innerHTML = '<tr class="listing-item"><td class=""></td><td>No Matches Found</td><td><small class="text-muted"></small></td><td><small class="file-size text-muted"></small></td></tr>';
   }
 }
+
+// Better Trim Methods
+
+String.prototype.trimLeft = function(charlist) {
+  if (charlist === undefined)
+    charlist = "\s";
+
+  return this.replace(new RegExp("^[" + charlist + "]+"), "");
+};
+
+String.prototype.trimRight = function(charlist) {
+  if (charlist === undefined)
+    charlist = "\s";
+
+  return this.replace(new RegExp("[" + charlist + "]+$"), "");
+};
+
+String.prototype.trim = function(charlist) {
+  return this.trimLeft(charlist).trimRight(charlist);
+};
