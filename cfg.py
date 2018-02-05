@@ -4,7 +4,7 @@ import lib.debug as debug
 
 
 #vvv# General Config #vvv#'''
-_EXCLUDES = ["lib", "app.py", "rsc", ".git", "include", "index.html", "directory.html"] # Exclude matching files or folders from program operation
+_EXCLUDES = ["lib", "app.py", "rsc", ".git", "include", "index.html", "directory.html", "search.html"] # Exclude matching files or folders from program operation
 #_ROOTDIR = "Manually Specify Root working Directory. Not reccomended for use."
 _DIRFILENAME = "index.html" # What should the directory html file be called?
 _DOMAIN = "localhost" # Set this to your domain name.

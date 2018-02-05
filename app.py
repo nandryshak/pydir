@@ -115,9 +115,14 @@ def get_size(start_path = '.'):
 console.log("Copying ./include to " + _ROOTDIR + "/include")
 os.system("cp -r include/ " + _ROOTDIR)
 
+console.log("Copying ./search.html to " + _ROOTDIR)
+with open('./search.html', 'r') as search_HTML: # First grab the original HTML template.
+    text = search_HTML.read().replace('$domain$', _DOMAIN) # Sub-in necessary values
+    with open(_ROOTDIR + '/search.html', 'w') as search_HTML_final: # Then write the composed HTML to file.
+        search_HTML_final.write(text)
+
 os.chdir(_ROOTDIR) # Switch to specified working directory.
 console.log("Working directory is now " + _ROOTDIR)
-
 # Build the dirtree into a JSON object.
 try:
     __DIRSTARTTIME__ = clock() # TIme the operation
@@ -130,6 +135,11 @@ except Exception as e:
     console.warn("Could not complete directory tree JSON generation due to an unknown error. Substituting an empty dictionary instead.")
     console.warn("Error Information: " + str(e))
     _DIRTREE = {}
+
+
+# Reserve a global variable to contain a list of all files.
+# Really it is an array of Dictionaries, where each dictionary is a single file
+_files = []
 
 # Get directory tree based on first argument
 console.log("Beginning directory traversal...")
@@ -156,6 +166,11 @@ for root, dirs, files in os.walk("."):
         if item.endswith(".html"):
             files.remove(item)
 
+
+    # Calculate the root-step
+    rootStep = "."
+    for item in root.split("/")[1:]:
+        rootStep += "/.."
 
     # Now traverse files and folders in the current root and add them, through the template, to directory.html
     fileText = "" # Begin with an empty string.
@@ -228,6 +243,16 @@ for root, dirs, files in os.walk("."):
         fileText += "\n"
         fileCount += 1
 
+        # Add all the files into an array of dictionaries.
+        fRecord = {'name': item}
+        fRecord['size'] = fileSize
+        fRecord['path'] = root + "/" + item
+        fRecord['lastmodified'] = datetime.fromtimestamp( int( os.path.getmtime(root+"/"+item) ) ).strftime('%Y-%m-%d %H:%M:%S')
+        fRecord['filesize'] = fileSize
+        _files.append(fRecord)
+
+
+
     fileText = _THEME.replace("$content$", fileText) # Insert the generated page-content into the theme.
 
     # Theme Variable Insertion here
@@ -265,9 +290,6 @@ for root, dirs, files in os.walk("."):
 
 
     # Set dynamic folder refs.
-    rootStep = "."
-    for item in root.split("/")[1:]:
-        rootStep += "/.."
     fileText = fileText.replace("$root-step$", rootStep)
 
 
@@ -287,4 +309,14 @@ for root, dirs, files in os.walk("."):
         console.warn("Exception information: " + str(e))
     console.log("Generated entries for " + str(dirCount) + " directories and " + str(fileCount) + " files in folder /" + root.strip("./") + ". Took " + str(round(((clock() - __DIRSTARTTIME__)*1000), 3)) + "ms")
     # print(fileText)
+
+console.log("Loading File Entries into files.json in /includes...")
+
+__DIRSTARTTIME__ = clock()
+with open('include/files.json', 'w') as jsonFile:  # Write directory tree information in the include folder as tree.json
+    jsonFile.write('var jsonText = \'')
+    jsonFile.write(json.dumps(_files).replace('\x00', '').replace(" null,", '').replace(' null', '').replace("null,", '').replace("'", "\\'"))
+    jsonFile.write('\'')
+console.log("Completed directory tree JSON generation in " + str(round(((clock() - __DIRSTARTTIME__)*1000), 3)) + "ms")
+
 console.log("Done. Took " + str(round(((clock() - __STARTTIME__)*1000), 3)) + "ms")

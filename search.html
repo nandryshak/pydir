@@ -5,23 +5,23 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Index of $domain$/$root-dir$</title>
+  <title>Index of $domain$/Search</title>
 
   <!-- Favicon -->
-  <link rel="shortcut icon" href="$root-step$/include/images/favicon/favicon-16-32.ico" type="image/x-icon">
-  <link rel="icon" href="$root-step$/include/images/favicon/favicon-16-32.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="./include/images/favicon/favicon-16-32.ico" type="image/x-icon">
+  <link rel="icon" href="./include/images/favicon/favicon-16-32.ico" type="image/x-icon">
 
   <!-- Pure -->
-  <link rel="stylesheet" href="$root-step$/include/css/pure.css">
+  <link rel="stylesheet" href="./include/css/pure.css">
 
   <!--[if lte IE 8]>
             <link rel="stylesheet" href="/include/css/side-menu-old-ie.css">
         <![endif]-->
   <!--[if gt IE 8]><!-->
-  <link rel="stylesheet" href="$root-step$/include/css/side-menu.css">
+  <link rel="stylesheet" href="./include/css/side-menu.css">
   <!--<![endif]-->
 
-  <link rel="stylesheet" href="$root-step$/include/css/main.css">
+  <link rel="stylesheet" href="./include/css/main.css">
 
 </head>
 
@@ -53,15 +53,15 @@
         <div class="heading">
           <div class="search-right">
             <div class="search-content">
-              <form action="$root-step$/search.html" class="pure-form" method="get">
+              <form action="./search.html" class="pure-form" method="get">
                 <input type="submit" class="pure-button search-icon" value="">
                 <input type="text" id="search-box" name="query">
               </form>
             </div>
           </div>
             <h2 class="breadcrumb-item heading">
-              <a href="/">$domain$</a>
-              <span class="smaller">$breadcrumb$</span>
+              <a href="/">$domain$ > </a>
+              <span class="smaller">Search</span>
             </h2>
           </div>
         <table class="pure-table pure-table-horizontal listing-table">
@@ -73,9 +73,7 @@
               <th>Size</th>
             </tr>
           </thead>
-
           <tbody id="file-list">
-            $content$
           </tbody>
         </table>
 
@@ -94,7 +92,11 @@
   </div>
 
 
-  <script src="$root-step$/include/js/ui.js"></script>
+  <script src="./include/js/ui.js"></script>
+  <script src="https://unpkg.com/lunr/lunr.js"></script>
+  <script type="text/javascript" src="./include/files.json"></script>
+  <script src="./include/js/search.js"></script>
+  <script type="text/javascript">
 </body>
 
 </html>
