@@ -47,9 +47,9 @@ function displaySearchResults(results, store) {
     for (var i = 0; i < results.length; i++) {  // Iterate over the results
       var item = store[results[i].ref];
       if(item) {
-        appendString += '<tr class="listing-item" onclick="window.location.href=\'' + item.path + '\'>';
+        appendString += '<tr class="listing-item" onclick="window.location.href=\'' + item.path + '\'">';
         appendString += '<td class=""></td>'
-        appendString += '<td><a class="file-name" draggable="true" href="' + item.path + '">' + item.name + '</a></td>'
+        appendString += '<td><a class="file-name" draggable="true" href="' + item.path + '">' + item.name + '<br> <small class="text-muted">' + item.path.trim('.') + '</small></a></td>'
         appendString += '<td><small class="text-muted">' + item.lastmodified + '</small></td>'
         appendString += '<td><small class="file-size text-muted">' + item.filesize + '</small></td></tr>'
       }
