@@ -39,12 +39,18 @@
             </a>
 
             <ul class="pure-menu-list">
-                <li class="pure-menu-item list-collapsed-icon"><div class="dir-icon"></div><a href="#" class="pure-menu-link">Home</a></li>
-                <li class="pure-menu-item list-collapsed-icon"><div class="dir-icon"></div><a href="#" class="pure-menu-link">About</a></li>
-
-                <li class="pure-menu-item list-collapsed-icon"><div class="dir-icon"></div><a href="#" class="pure-menu-link">Services</a></li>
-
-                <li class="pure-menu-item list-collapsed-icon"><div class="dir-icon"></div><a href="#" class="pure-menu-link">Contact</a></li>
+              $sidenav$
+                <li class="pure-menu-item">
+                  <div class="side-checkbox">
+                    <input type="checkbox" id="collapse"/>
+                    <label class="list-collapsed-icon" for="collapse"></label>
+                  </div>
+                  <div class="side-content" id="a1">
+                    <a href="$side-href$" class="pure-menu-link">
+                      $side-name$
+                    </a>
+                  </div>
+                </li>
             </ul>
         </div>
     </div>

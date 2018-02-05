@@ -61,6 +61,8 @@ def dirtree(startpath):
 # Recursive directory tree to JSON converter with excludes support.
 # Modified version of https://unix.stackexchange.com/questions/164602/how-to-output-the-directory-structure-to-json-format
 def dirTree(path):
+    _template = '<li class="pure-menu-item list-collapsed-icon"><div class="dir-icon"></div><a href="#" class="pure-menu-link">Home</a></li>'
+
     if os.path.isdir(path):  # If it's a directory
         d = {'name': os.path.basename(path)}
         d['type'] = "directory"
@@ -128,14 +130,14 @@ try:
     __DIRSTARTTIME__ = clock() # TIme the operation
 
     _DIRTREE = dirTree(".")
-    with open('include/tree.json', 'w') as jsonFile:  # Write directory tree information in the include folder as tree.json
-        jsonFile.write(json.dumps(_DIRTREE).replace('\x00', '').replace(" null,", '').replace(' null', '').replace("null,", ''))
+    _DIRSTRING = json.dumps(_DIRTREE).replace('\x00', '').replace(" null,", '').replace(' null', '').replace("null,", '')
+    #with open('include/tree.json', 'w') as jsonFile:  # Write directory tree information in the include folder as tree.json
+    #    jsonFile.write(json.dumps(_DIRTREE).replace('\x00', '').replace(" null,", '').replace(' null', '').replace("null,", ''))
     console.log("Completed directory tree JSON generation in " + str(round(((clock() - __DIRSTARTTIME__)*1000), 3)) + "ms")
 except Exception as e:
     console.warn("Could not complete directory tree JSON generation due to an unknown error. Substituting an empty dictionary instead.")
     console.warn("Error Information: " + str(e))
     _DIRTREE = {}
-
 
 # Reserve a global variable to contain a list of all files.
 # Really it is an array of Dictionaries, where each dictionary is a single file
@@ -286,7 +288,7 @@ for root, dirs, files in os.walk("."):
     fileText = fileText.replace("$breadcrumb$", breadCrumb) # write composed breadcrumb to file.
 
     # Set sidenav dir tree
-    #fileText = fileText.replace("$sidenav$", sidenav)
+    fileText = fileText.replace("$sidenav$", _DIRSTRING)
 
 
     # Set dynamic folder refs.
