@@ -116,7 +116,7 @@ console.log("Copying ./include to " + _ROOTDIR + "/include")
 os.system("cp -r include/ " + _ROOTDIR)
 
 console.log("Copying ./search.html to " + _ROOTDIR)
-with open('./search.html', 'r') as search_HTML: # First grab the original HTML template.
+with open('./rsc/search.html', 'r') as search_HTML: # First grab the original HTML template.
     text = search_HTML.read().replace('$domain$', _DOMAIN) # Sub-in necessary values
     with open(_ROOTDIR + '/search.html', 'w') as search_HTML_final: # Then write the composed HTML to file.
         search_HTML_final.write(text)
