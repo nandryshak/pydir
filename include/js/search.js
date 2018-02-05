@@ -20,7 +20,7 @@ if (searchTerm) {
     }
   });
 
-  displaySearchResults(idx.search(searchTerm + "~3"), _Tree);
+  displaySearchResults(idx.search(searchTerm + "~1"), _Tree);
 }
 
 
