@@ -15,7 +15,7 @@ import sys
 import json # Mostly used for debugging
 from time import clock
 from datetime import datetime
-
+import tempfile # Used as a buffer zone for some functions
 # Custom Modules (found in ./lib )
 import lib.debug as debug
 
@@ -60,9 +60,35 @@ def dirtree(startpath):
 
 # Recursive directory tree to JSON converter with excludes support.
 # Modified version of https://unix.stackexchange.com/questions/164602/how-to-output-the-directory-structure-to-json-format
-def dirTree(path):
-    _template = '<li class="pure-menu-item list-collapsed-icon"><div class="dir-icon"></div><a href="#" class="pure-menu-link">Home</a></li>'
+def dirTree(path, indent = 0, streak=0): # When called with no workingString argument(as it should be, it will start from scratch.)
+    #_template = '''
+    #<li class="pure-menu-item">
+    #    <div class="side-checkbox">
+    #        <input type="checkbox" id="collapse"/>
+    #        <label class="list-collapsed-icon" for="collapse"></label>
+    #    </div>
+    #    <div class="side-content" id="a1">
+    #        <a href="$side-href$" class="pure-menu-link">
+    #            $side-name$
+    #        </a>
+    #    </div>
+    #</li>
+    #            '''
+    #tfile.write('<ul class="pure-menu-list">')
+    for p in os.listdir(path):
+        if p not in _EXCLUDES: # Make sure we're not looking at an ILLEGAL FOLDER >:(
+            fullpath = os.path.join(path, p)
+            if os.path.isdir(fullpath):
+                tfile.write('<li class="pure-menu-item" style="padding-left: ' + str(indent * 10) + 'px"><div class="side-checkbox"><input type="checkbox" id="collapse"/><label class="list-collapsed-icon" for="collapse"></label></div><div class="side-content" id="a1"><a href="$root-step$' + str(p) + '" class="pure-menu-link">' + str(p) + "</a></div>")
+                tfile.write('<ul class="pure-menu-list">')
+                dirTree(fullpath, indent=indent+1, streak=streak+1)
+                tfile.write("</ul>")
+            tfile.write("</li>")
+    #tfile.write("</ul>")
 
+    # Old Method - Returns JSON
+    # Keeping it *Just* in case it comes in useful later.
+    '''
     if os.path.isdir(path):  # If it's a directory
         d = {'name': os.path.basename(path)}
         d['type'] = "directory"
@@ -82,7 +108,7 @@ def dirTree(path):
         return d
     except:
         return
-
+    '''
 
 # Convert byte count to size string
 def fileSizeCount(fileSize):
@@ -129,15 +155,26 @@ console.log("Working directory is now " + _ROOTDIR)
 try:
     __DIRSTARTTIME__ = clock() # TIme the operation
 
-    _DIRTREE = dirTree(".")
-    _DIRSTRING = json.dumps(_DIRTREE).replace('\x00', '').replace(" null,", '').replace(' null', '').replace("null,", '')
+    # All this is old stuff from the JSON-based generation. Now we do in-house HTML generation, and sub in the links using
+    # the current root-step
+
+    #_DIRTREE = dirTree(".")
+    #_DIRSTRING = json.dumps(_DIRTREE).replace('\x00', '').replace(" null,", '').replace(' null', '').replace("null,", '')
     #with open('include/tree.json', 'w') as jsonFile:  # Write directory tree information in the include folder as tree.json
     #    jsonFile.write(json.dumps(_DIRTREE).replace('\x00', '').replace(" null,", '').replace(' null', '').replace("null,", ''))
+
+    # dirTree exports it's composed HTML to a temporary file in memory.
+    tfile = tempfile.SpooledTemporaryFile(mode="w+s")
+    dirTree(".")
+    tfile.seek(0)
+    _DIRTREE = tfile.read()#[len('<ul class="pure-menu-list>')+1:] # Remove initial and final ul elements - they are already in the template
+    #_DIRTREE = _DIRTREE[:-(len('</ul>'))]
+    #print(_DIRTREE)
     console.log("Completed directory tree JSON generation in " + str(round(((clock() - __DIRSTARTTIME__)*1000), 3)) + "ms")
 except Exception as e:
     console.warn("Could not complete directory tree JSON generation due to an unknown error. Substituting an empty dictionary instead.")
     console.warn("Error Information: " + str(e))
-    _DIRTREE = {}
+    _DIRTREE = ""
 
 # Reserve a global variable to contain a list of all files.
 # Really it is an array of Dictionaries, where each dictionary is a single file
@@ -288,7 +325,7 @@ for root, dirs, files in os.walk("."):
     fileText = fileText.replace("$breadcrumb$", breadCrumb) # write composed breadcrumb to file.
 
     # Set sidenav dir tree
-    fileText = fileText.replace("$sidenav$", _DIRSTRING)
+    fileText = fileText.replace("$sidenav$", _DIRTREE)
 
 
     # Set dynamic folder refs.
