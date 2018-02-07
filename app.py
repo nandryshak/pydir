@@ -79,7 +79,7 @@ def dirTree(path, indent = 0, streak=0): # When called with no workingString arg
         if p not in _EXCLUDES: # Make sure we're not looking at an ILLEGAL FOLDER >:(
             fullpath = os.path.join(path, p)
             if os.path.isdir(fullpath):
-                tfile.write('<li class="pure-menu-item" style="padding-left: ' + str(indent * 10) + 'px"><div class="side-checkbox"><input type="checkbox" id="collapse"/><label class="list-collapsed-icon" for="collapse"></label></div><div class="side-content" id="a1"><a href="$root-step$' + str(p) + '" class="pure-menu-link">' + str(p) + "</a></div>")
+                tfile.write('<li class="pure-menu-item" style="padding-left: ' + str(indent * 10) + 'px"><div class="side-checkbox"><input type="checkbox" id="collapse"/><label class="list-collapsed-icon" for="collapse"></label></div><div class="side-content" id="a1"><a href="$root-step$/' + str(fullpath) + '" class="pure-menu-link">' + str(p) + "</a></div>")
                 tfile.write('<ul class="pure-menu-list">')
                 dirTree(fullpath, indent=indent+1, streak=streak+1)
                 tfile.write("</ul>")
@@ -356,6 +356,6 @@ with open('include/files.json', 'w') as jsonFile:  # Write directory tree inform
     jsonFile.write('var jsonText = \'')
     jsonFile.write(json.dumps(_files).replace('\x00', '').replace(" null,", '').replace(' null', '').replace("null,", '').replace("'", "\\'"))
     jsonFile.write('\'')
-console.log("Completed directory tree JSON generation in " + str(round(((clock() - __DIRSTARTTIME__)*1000), 3)) + "ms")
+console.log("Completed file list JSON generation in " + str(round(((clock() - __DIRSTARTTIME__)*1000), 3)) + "ms")
 
 console.log("Done. Took " + str(round(((clock() - __STARTTIME__)*1000), 3)) + "ms")
