@@ -16,6 +16,8 @@ import json # Mostly used for debugging
 from time import clock
 from datetime import datetime
 import tempfile # Used as a buffer zone for some functions
+import random
+
 # Custom Modules (found in ./lib )
 import lib.debug as debug
 
@@ -79,8 +81,12 @@ def dirTree(path, indent = 0, streak=0): # When called with no workingString arg
         if p not in _EXCLUDES: # Make sure we're not looking at an ILLEGAL FOLDER >:(
             fullpath = os.path.join(path, p)
             if os.path.isdir(fullpath):
-                tfile.write('<li class="pure-menu-item" style="padding-left: ' + str(indent * 10) + 'px"><div class="side-checkbox"><input type="checkbox" id="collapse"/><label class="list-collapsed-icon" for="collapse"></label></div><div class="side-content" id="a1"><a href="$root-step$/' + str(fullpath) + '" class="pure-menu-link">' + str(p) + "</a></div>")
-                tfile.write('<ul class="pure-menu-list">')
+                uid = ''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz') for i in range(6))
+                # Handle some css magic for the dropdowns.
+                # Not the nicest thing but it works.
+                # I need to dynamically write styles here to make use of the button hack
+                tfile.write('<li class="pure-menu-item" style="padding-left: ' + str(indent * 10) + 'px"><div class="side-checkbox"><input type="checkbox" onclick="dropdown(this)" id="collapse_' + uid + '"/><label class="list-collapsed-icon" for="collapse_' + uid + '"></label></div><div class="side-content" id="a1"><a href="$root-step$/' + str(fullpath) + '" class="pure-menu-link">' + str(p) + "</a></div>")
+                tfile.write('<ul class="pure-menu-list default-hidden" id="' + uid + '">')
                 dirTree(fullpath, indent=indent+1, streak=streak+1)
                 tfile.write("</ul>")
             tfile.write("</li>")

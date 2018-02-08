@@ -166,8 +166,16 @@ footer a:visited {
 .search-icon:active {
   background: url("/include/images/search.svg") left top no-repeat;
   background-position: center;
-  padding-left: 50px;
+  padding-left: 50px;5k
   display: inline;
   background-size: 40%;
   height: 100%;
+}
+
+.list-collapsed-icon {
+  background-size: cover;
+}
+
+.default-hidden {
+  display: none;
 }
