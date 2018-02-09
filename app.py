@@ -79,15 +79,25 @@ def dirTree(path, indent = 0, streak=0): # When called with no workingString arg
     for p in os.listdir(path):
         if p not in _EXCLUDES: # Make sure we're not looking at an ILLEGAL FOLDER >:(
             fullpath = os.path.join(path, p)
+
+            # Check to see if the folder is empty and hide the chevron if it is (replace it with the folder icon)
             if os.path.isdir(fullpath):
+                isEmpty = True;
+                for subd in os.listdir(fullpath):
+                    if os.path.isdir( os.path.join(fullpath, subd) ):
+                        isEmpty = False
+
                 uid = ''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz') for i in range(6))
                 # Handle some css magic for the dropdowns.
                 # Not the nicest thing but it works.
                 # I need to dynamically write styles here to make use of the button hack
                 tfile.write('<li class="pure-menu-item" style="padding-left: ' + str(indent * 10) + 'px"><div class="side-checkbox"><input type="checkbox" onclick="dropdown(this)" id="collapse_' + uid + '"/><label class="list-collapsed-icon" for="collapse_' + uid + '" id="chevron_' + uid + '"></label></div><div class="side-content" id="a1"><a href="$root-step$/' + str(fullpath) + '" class="pure-menu-link">' + str(p) + "</a></div>")
                 tfile.write('<ul class="pure-menu-list default-hidden" id="' + uid + '">')
-                dirTree(fullpath, indent=indent+1, streak=streak+1)
+                dirTree(fullpath, indent=indent+1, streak=streak+1) # This will return False if there are no subfolders
                 tfile.write("</ul>")
+
+                if(isEmpty): # If there are no subfolders, hide the chevron
+                    tfile.write('<style>#chevron_' + uid + '{background-image:url(/include/images/fallback/folder.png);background-size:70%;background-position:right center}</style>')
             tfile.write("</li>")
 
 # Convert byte count to size string
