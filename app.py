@@ -91,8 +91,12 @@ def dirTree(path, indent = 0, streak=0): # When called with no workingString arg
                 # Handle some css magic for the dropdowns.
                 # Not the nicest thing but it works.
                 # I need to dynamically write styles here to make use of the button hack
-                tfile.write('<li class="pure-menu-item" style="padding-left: ' + str(indent * 10) + 'px"><div class="side-checkbox"><input type="checkbox" onclick="dropdown(this)" id="collapse_' + uid + '"/><label class="list-collapsed-icon" for="collapse_' + uid + '" id="chevron_' + uid + '"></label></div><div class="side-content" id="a1"><a href="$root-step$/' + str(fullpath) + '" class="pure-menu-link">' + str(p) + "</a></div>")
-                tfile.write('<ul class="pure-menu-list default-hidden" id="' + uid + '">')
+                if(not isEmpty):
+                    tfile.write('<li class="pure-menu-item" style="padding-left: ' + str(indent * 10) + 'px"><div class="side-checkbox"><input type="checkbox" onclick="dropdown(this)" id="collapse_' + uid + '"/><label class="list-collapsed-icon" for="collapse_' + uid + '" id="chevron_' + uid + '"></label></div><div class="side-content" id="a1"><a href="$root-step$/' + str(fullpath) + '" class="pure-menu-link">' + str(p) + "</a></div>")
+                    tfile.write('<ul class="pure-menu-list default-hidden" id="' + uid + '">')
+                else:
+                    tfile.write('<li class="pure-menu-item" style="padding-left: ' + str(indent * 10) + 'px"><div class="side-checkbox"><input type="checkbox" id="collapse_' + uid + '"/><label class="list-collapsed-icon" for="collapse_' + uid + '" id="chevron_' + uid + '"></label></div><div class="side-content" id="a1"><a href="$root-step$/' + str(fullpath) + '" class="pure-menu-link">' + str(p) + "</a></div>")
+                    tfile.write('<ul class="pure-menu-list" id="' + uid + '">')
                 dirTree(fullpath, indent=indent+1, streak=streak+1) # This will return False if there are no subfolders
                 tfile.write("</ul>")
 
