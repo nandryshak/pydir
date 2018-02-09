@@ -125,14 +125,14 @@ console.log("Copying ./include to " + _ROOTDIR + "/include")
 os.system("cp -r include/ " + _ROOTDIR)
 
 console.log("Copying ./search.html to " + _ROOTDIR)
+SearchText = ""
 with open('./rsc/search.html', 'r') as search_HTML: # First grab the original HTML template.
-    text = search_HTML.read().replace('$domain$', _DOMAIN) # Sub-in necessary values
-    with open(_ROOTDIR + '/search.html', 'w') as search_HTML_final: # Then write the composed HTML to file.
-        search_HTML_final.write(text)
+    SearchText = search_HTML.read().replace('$domain$', _DOMAIN) # Sub-in necessary values
 
 os.chdir(_ROOTDIR) # Switch to specified working directory.
 console.log("Working directory is now " + _ROOTDIR)
-# Build the dirtree into a JSON object.
+
+# Build the dirtree into an HTML object.
 try:
     __DIRSTARTTIME__ = clock() # TIme the operation
 
@@ -156,6 +156,9 @@ except Exception as e:
     console.warn("Could not complete directory tree JSON generation due to an unknown error. Substituting an empty dictionary instead.")
     console.warn("Error Information: " + str(e))
     _DIRTREE = ""
+
+with open(_ROOTDIR + '/search.html', 'w+') as search_HTML_final: # Then write the composed HTML to file.
+    search_HTML_final.write(SearchText.replace("$sidenav$", _DIRTREE))
 
 # Reserve a global variable to contain a list of all files.
 # Really it is an array of Dictionaries, where each dictionary is a single file

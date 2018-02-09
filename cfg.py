@@ -13,7 +13,8 @@ _EXCLUDES = [
     "index.html",
     "directory.html",
     "search.html",
-    ".git"
+    ".git",
+    "__pycache__"
 ] # Exclude matching files or folders from program operation
 #_ROOTDIR = "Manually Specify Root working Directory. Not reccomended for use."
 _DIRFILENAME = "index.html" # What should the directory html file be called?
