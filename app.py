@@ -76,7 +76,6 @@ def dirTree(path, indent = 0, streak=0): # When called with no workingString arg
     #    </div>
     #</li>
     #            '''
-    #tfile.write('<ul class="pure-menu-list">')
     for p in os.listdir(path):
         if p not in _EXCLUDES: # Make sure we're not looking at an ILLEGAL FOLDER >:(
             fullpath = os.path.join(path, p)
