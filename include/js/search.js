@@ -3,6 +3,9 @@ var _Tree = JSON.parse(jsonText);
 
 var searchTerm = getQueryVariable('query');
 
+
+document.getElementById('file-list').innerHTML = '<tr class="listing-item"><td class=""></td><td>Searching...</td><td><small class="text-muted"></small></td><td><small class="file-size text-muted"></small></td></tr>';
+
 if (searchTerm) {
   document.getElementById('search-box').setAttribute("value", searchTerm);
 

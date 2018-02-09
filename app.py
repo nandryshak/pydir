@@ -85,36 +85,11 @@ def dirTree(path, indent = 0, streak=0): # When called with no workingString arg
                 # Handle some css magic for the dropdowns.
                 # Not the nicest thing but it works.
                 # I need to dynamically write styles here to make use of the button hack
-                tfile.write('<li class="pure-menu-item" style="padding-left: ' + str(indent * 10) + 'px"><div class="side-checkbox"><input type="checkbox" onclick="dropdown(this)" id="collapse_' + uid + '"/><label class="list-collapsed-icon" for="collapse_' + uid + '"></label></div><div class="side-content" id="a1"><a href="$root-step$/' + str(fullpath) + '" class="pure-menu-link">' + str(p) + "</a></div>")
+                tfile.write('<li class="pure-menu-item" style="padding-left: ' + str(indent * 10) + 'px"><div class="side-checkbox"><input type="checkbox" onclick="dropdown(this)" id="collapse_' + uid + '"/><label class="list-collapsed-icon" for="collapse_' + uid + '" id="chevron_' + uid + '"></label></div><div class="side-content" id="a1"><a href="$root-step$/' + str(fullpath) + '" class="pure-menu-link">' + str(p) + "</a></div>")
                 tfile.write('<ul class="pure-menu-list default-hidden" id="' + uid + '">')
                 dirTree(fullpath, indent=indent+1, streak=streak+1)
                 tfile.write("</ul>")
             tfile.write("</li>")
-    #tfile.write("</ul>")
-
-    # Old Method - Returns JSON
-    # Keeping it *Just* in case it comes in useful later.
-    '''
-    if os.path.isdir(path):  # If it's a directory
-        d = {'name': os.path.basename(path)}
-        d['type'] = "directory"
-        d['children'] = []
-
-        for x in os.listdir(path): # Loop through all subfolders/files and recursively delve into subfolders as well.
-            if x not in _EXCLUDES: # Make sure folder is allowed based on _EXCLUDES
-                d['children'] += [ dirTree(os.path.join(path,x)) ]
-    else: # if it's not a directory it's a file
-        #if os.path.basename(path) not in _EXCLUDES: # Make sure it's allowed based on _EXCLUDES
-        #    d = {'name': os.path.basename(path)}
-        #    d['type'] = "file"
-
-        # Files should be ignored since the tree is *only* for the sidebar.
-        pass
-    try:
-        return d
-    except:
-        return
-    '''
 
 # Convert byte count to size string
 def fileSizeCount(fileSize):
