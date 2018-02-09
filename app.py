@@ -93,15 +93,16 @@ def dirTree(path, indent = 0, streak=0): # When called with no workingString arg
                 # I need to dynamically write styles here to make use of the button hack
                 if(not isEmpty):
                     tfile.write('<li class="pure-menu-item" style="padding-left: ' + str(indent * 10) + 'px"><div class="side-checkbox"><input type="checkbox" onclick="dropdown(this)" id="collapse_' + uid + '"/><label class="list-collapsed-icon" for="collapse_' + uid + '" id="chevron_' + uid + '"></label></div><div class="side-content" id="a1"><a href="$root-step$/' + str(fullpath) + '" class="pure-menu-link">' + str(p) + "</a></div>")
-                    tfile.write('<ul class="pure-menu-list"></ul>')
-                    tfile.write('<ul class="pure-menu-list default-hidden" id="' + uid + '">')
+                    tfile.write('<ul class="pure-menu-list"></ul>') # This is here to fix an issue regarding display:none, where it would randomly indent following elements.
+                                                                    # It guarantees there's one element underneath the li(s), and secures the indentation.
+                    tfile.write('<ul class="pure-menu-list default-hidden" id="' + uid + '">') # This is the "real" <ul> to hold the subcontent, if at all.
                 else:
                     tfile.write('<li class="pure-menu-item" style="padding-left: ' + str(indent * 10) + 'px"><div class="side-checkbox"><input type="checkbox" id="collapse_' + uid + '"/><label class="list-collapsed-icon" for="collapse_' + uid + '" id="chevron_' + uid + '"></label></div><div class="side-content" id="a1"><a href="$root-step$/' + str(fullpath) + '" class="pure-menu-link">' + str(p) + "</a></div>")
                     tfile.write('<ul class="pure-menu-list" id="' + uid + '">')
                 dirTree(fullpath, indent=indent+1, streak=streak+1) # This will return False if there are no subfolders
                 tfile.write("</ul>")
 
-                if(isEmpty): # If there are no subfolders, hide the chevron
+                if(isEmpty): # If there are no subfolders, switch the chevron for the folder icon
                     tfile.write('<style>#chevron_' + uid + '{background-image:url(/include/images/fallback/folder.png);background-size:70%;background-position:right center}</style>')
             tfile.write("</li>")
 
