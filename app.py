@@ -321,12 +321,6 @@ for root, dirs, files in os.walk("."):
         dirFile.write("")
         dirFile.write(fileText)
 
-        # also add root-step substitution into the CSS files.
-        with open('include/css/main.css', 'r') as f:  # Write directory tree information in the include folder as tree.json
-            ftext = f.read()
-        with open('include/css/main.css', 'w') as f:
-            f.write(ftext.replace('$root-step$', rootStep))
-
     except Exception as e:
         console.warn("There was an unhandled error while writing the directory \"" + root + "\"...")
         console.warn("Exception information: " + str(e))
