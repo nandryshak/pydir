@@ -47,6 +47,11 @@ input[type=checkbox]:checked+label {
 
 .pure-menu-link {
   margin-left: 20px;
+  font-size: 90%;
+}
+
+.pure-menu {
+  overflow-x: hidden;
 }
 
 .listing-table {
@@ -174,7 +179,7 @@ footer a:visited {
 }
 
 .list-collapsed-icon {
-  background-size: cover;
+  background-size: 85%;
 }
 
 .default-hidden {
