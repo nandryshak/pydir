@@ -9,24 +9,9 @@ See rsc/stylesheet.html for the default css classes used in generation.
 ##########################################
 """
 
-# Python Builtins
-import os
-import sys
-import json # Mostly used for debugging
-from time import clock
-from datetime import datetime
-import tempfile # Used as a buffer zone for some functions
-import random
-import hashlib
-import xxhash
-
-# Custom Modules (found in ./lib )
-import lib.debug as debug
 
 ''' Set up runtime variables and configuration values. '''
-_ROOTDIR = sys.argv[1] # The root working directory is specified as the first cli arg.
 import cfg # Import the config file
-console = debug.logger(level=cfg._LOGLEVEL) # Init log level before anything essential happens.
 
 # Handle in case cfg.py does not contain cfg._ROOTDIR
 try: _ROOTDIR = cfg._ROOTDIR
@@ -43,6 +28,24 @@ _SKIPDIRS = cfg._SKIPDIRS
 _FOLLOWSYMLINKS = cfg._FOLLOWSYMLINKS     # Should the spider follow symbolic links?
 _WEBROOT = cfg._WEBROOT   # THIS MUST BE CHANGED FOR SYMLINKS TO WORK.
 _ALLOW_OUT_OF_WEBROOT = cfg._ALLOW_OUT_OF_WEBROOT
+
+
+# Custom Modules (found in ./lib )
+import lib.debug as debug
+console = debug.logger(level=cfg._LOGLEVEL, initMsg="Console logging started.") # Init log level before anything essential happens.
+
+# Python Builtins
+import os
+import sys
+import json # Mostly used for debugging
+from time import clock
+from datetime import datetime
+import tempfile # Used as a buffer zone for some functions
+import random
+import hashlib
+import xxhash
+
+_ROOTDIR = sys.argv[1] # The root working directory is specified as the first cli arg.
 
 # Misc utils
 
