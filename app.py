@@ -13,10 +13,6 @@ See rsc/stylesheet.html for the default css classes used in generation.
 ''' Set up runtime variables and configuration values. '''
 import cfg # Import the config file
 
-# Handle in case cfg.py does not contain cfg._ROOTDIR
-try: _ROOTDIR = cfg._ROOTDIR
-except: pass
-
 # Assign the CFG Vars locally.
 _EXCLUDES = cfg._EXCLUDES # Exclude matching files or folders from program operation
 _DIRFILENAME = cfg._DIRFILENAME # What should the directory html file be called?
@@ -45,8 +41,11 @@ import random
 import hashlib
 import xxhash
 
-_ROOTDIR = sys.argv[1] # The root working directory is specified as the first cli arg.
 
+_ROOTDIR = sys.argv[1] # The root working directory is specified as the first cli arg.
+# Handle in case cfg.py does not contain cfg._ROOTDIR
+try: _ROOTDIR = cfg._ROOTDIR
+except: pass
 
 # Recursive directory tree to JSON converter with excludes support.
 # Modified version of https://unix.stackexchange.com/questions/164602/how-to-output-the-directory-structure-to-json-format
