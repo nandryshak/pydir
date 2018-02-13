@@ -53,6 +53,15 @@ Search is reasonably fast, and since it uses [lunr.js](https://lunrjs.com) it su
 # Examples
 See an example page listing (may not always be up to date) at [static.dnd.guide](https://static.dnd.guide)
 
+# FAQ
+- Q: Help! Symlinks aren't showing up!
+  - A: First, make sure the `FOLLOWSYMLINKS` option is set to true in the config file. If that doesn't work, then make sure you have set the proper webroot in `cfg.py` and there is no trailing slash `/` at the end of it. If you want the symlinks to go out of your set webroot, make sure the appropriate setting is also changed in the config.
+
+- Q: Can I use this for my commercial product/website without crediting you?
+  - A: Absolutely! There are a few requirements, though. First, this software must retain the MIT license. Second, I am not liable for what this program does or what you do with it. Use it at your own risk.
+  
+- Q: Why is this FAQ so short?
+  - A: People don't ask many questions.
 # License and Attribution
 This work is licensed under the MIT license. Some parts of this work may be licensed differently.
 Additionally, there is an attribution in the footer of the default template. Feel free to edit or remove it, but it would be appreciated if it were left in.
