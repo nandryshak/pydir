@@ -32,9 +32,9 @@ THE SOFTWARE.
 class logger:
     # Logging levels.
     # -1 = Disabled. 0 = INFO, 1 = WARN, 2 = ERROR, 3 = Internal Logs. FATAL will trigger at all levels aside from -1.
-    def __init__(self, level=0):
+    def __init__(self, level=0, initMsg="Console Logging Initialised"):
         self.level = level
-        self.log("Console Logging Initialised")
+        self.log(initMsg)
 
     # Standard Logging level (1)
     def log(self, msg, endl="\n"):
