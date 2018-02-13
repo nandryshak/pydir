@@ -9,6 +9,16 @@ See rsc/stylesheet.html for the default css classes used in generation.
 ##########################################
 """
 
+# Python Builtins
+import os
+import sys
+import json # Mostly used for debugging
+from time import clock
+from datetime import datetime
+import tempfile # Used as a buffer zone for some functions
+import random
+import hashlib
+import xxhash
 
 ''' Set up runtime variables and configuration values. '''
 import cfg # Import the config file
@@ -29,17 +39,6 @@ _ALLOW_OUT_OF_WEBROOT = cfg._ALLOW_OUT_OF_WEBROOT
 # Custom Modules (found in ./lib )
 import lib.debug as debug
 console = debug.logger(level=cfg._LOGLEVEL, initMsg="Console logging started.") # Init log level before anything essential happens.
-
-# Python Builtins
-import os
-import sys
-import json # Mostly used for debugging
-from time import clock
-from datetime import datetime
-import tempfile # Used as a buffer zone for some functions
-import random
-import hashlib
-import xxhash
 
 
 _ROOTDIR = sys.argv[1] # The root working directory is specified as the first cli arg.
@@ -90,29 +89,19 @@ def dirTree(path, indent = 0, streak=0): # When called with no workingString arg
 
 # Convert byte count to size string
 def fileSizeCount(fileSize):
-    if fileSize >= 1000000000000: # More than a trillion bytes means it's in terabytes.
-        fileSize = round((fileSize / 1000000000000), 2) # convert to terabytes
-        fileSize = str(fileSize) + " TB"
-    elif fileSize >= 1000000000: # More than a billion means it's in gigabytes.
-        fileSize = round((fileSize / 1000000000), 2) # convert to gigabytes
-        fileSize = str(fileSize) + " GB"
-    elif fileSize >= 1000000: # More than a million means it's in megabytes.
-        fileSize = round((fileSize / 1000000), 2) # convert to megabytes
-        fileSize = str(fileSize) + " MB"
-    elif fileSize >= 1000: # More than a thousand means it's in kilobytes.
-        fileSize = round((fileSize / 1000), 2) # convert to kb
-        fileSize = str(fileSize) + " KB"
-    else: #Anything below is in bytes.
-        fileSize = str(fileSize) + " B"
+    if fileSize >= 1000000000000: fileSize = str(round((fileSize / 1000000000000), 2)) + " TB" # convert to terabytes
+    elif fileSize >= 1000000000: fileSize = str(round((fileSize / 1000000000), 2)) + " GB" # convert to gigabytes
+    elif fileSize >= 1000000: fileSize = str(round((fileSize / 1000000), 2)) + " MB" # convert to megabytes
+    elif fileSize >= 1000: fileSize = str(round((fileSize / 1000), 2)) + " KB" # convert to kb
+    else: fileSize = str(fileSize) + " B"
     return fileSize
 
 # Get the size of a given file or folder.
-def get_size(start_path = '.'):
+def dirSize(start_path = '.'):
     total_size = 0
     for dirpath, dirnames, filenames in os.walk(start_path):
         for f in filenames:
-            fp = os.path.join(dirpath, f)
-            total_size += os.path.getsize(fp)
+            total_size += os.path.getsize(os.path.join(dirpath, f))
     return total_size
 
 
@@ -120,7 +109,7 @@ def get_size(start_path = '.'):
 
 console.log("Copying ./include to " + _ROOTDIR + "/include")
 os.system("cp -r include/ " + _ROOTDIR)
-
+4
 console.log("Copying ./search.html to " + _ROOTDIR)
 SearchText = ""
 with open('./rsc/search.html', 'r') as search_HTML: # First grab the original HTML template.
@@ -246,7 +235,7 @@ for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
         # Handle Filesizes
         try: # Preferred method, as it is very fast.
             #fileSize = int(os.popen("du -bcks " + '"' + root + "/" + item + '"').read().split("\t")[0])
-            fileSize = get_size(root + "/" + item)
+            fileSize = dirSize(root + "/" + item)
             fileSize = fileSizeCount(fileSize)
         except: # Failure likely means DU is not installed on the system, therefore we should use the slow method.
             console.warn("DU is either not installed or erroring. It is reccomended to have DU installed on your system; the backup method is very slow.")
