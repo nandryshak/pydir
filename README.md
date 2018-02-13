@@ -17,7 +17,7 @@ It first will compile HTML for the folders, then takes file names and calculates
 
 # Configuration
 
-Edit cfg.py to modify user options.
+Copy `cfg.py.default` to `cfg.py`. Then edit `cfg.py` to modify user options.
 
 Here are some settings for you to modify.
 
