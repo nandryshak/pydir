@@ -47,44 +47,10 @@ import xxhash
 
 _ROOTDIR = sys.argv[1] # The root working directory is specified as the first cli arg.
 
-# Misc utils
-
-# Thanks to https://stackoverflow.com/questions/9727673/list-directory-tree-structure-in-python
-'''
-def dirtree(startpath):
-    l = []
-    for root, dirs, files in os.walk(startpath):
-        level = root.replace(startpath, '').count(os.sep)
-        for item in _EXCLUDES:
-            try:
-                dirs.remove(item)
-            except:
-                try:
-                    files.remove(item)
-                except:
-                    pass
-        if root not in _EXCLUDES:
-            l.append((os.path.basename(root), level))
-            return(l)
-'''
-
 
 # Recursive directory tree to JSON converter with excludes support.
 # Modified version of https://unix.stackexchange.com/questions/164602/how-to-output-the-directory-structure-to-json-format
 def dirTree(path, indent = 0, streak=0): # When called with no workingString argument(as it should be, it will start from scratch.)
-    #_template = '''
-    #<li class="pure-menu-item">
-    #    <div class="side-checkbox">
-    #        <input type="checkbox" id="collapse"/>
-    #        <label class="list-collapsed-icon" for="collapse"></label>
-    #    </div>
-    #    <div class="side-content" id="a1">
-    #        <a href="$side-href$" class="pure-menu-link">
-    #            $side-name$
-    #        </a>
-    #    </div>
-    #</li>
-    #            '''
     for p in os.listdir(path):
         # Remove symlinks if they leave the webroot
         if(not _ALLOW_OUT_OF_WEBROOT):
@@ -168,21 +134,11 @@ console.log("Working directory is now " + _ROOTDIR)
 try:
     __DIRSTARTTIME__ = clock() # TIme the operation
 
-    # All this is old stuff from the JSON-based generation. Now we do in-house HTML generation, and sub in the links using
-    # the current root-step
-
-    #_DIRTREE = dirTree(".")
-    #_DIRSTRING = json.dumps(_DIRTREE).replace('\x00', '').replace(" null,", '').replace(' null', '').replace("null,", '')
-    #with open('include/tree.json', 'w') as jsonFile:  # Write directory tree information in the include folder as tree.json
-    #    jsonFile.write(json.dumps(_DIRTREE).replace('\x00', '').replace(" null,", '').replace(' null', '').replace("null,", ''))
-
     # dirTree exports it's composed HTML to a temporary file in memory.
     tfile = tempfile.SpooledTemporaryFile(mode="w+s")
     dirTree(".")
     tfile.seek(0)
-    _DIRTREE = tfile.read()#[len('<ul class="pure-menu-list>')+1:] # Remove initial and final ul elements - they are already in the template
-    #_DIRTREE = _DIRTREE[:-(len('</ul>'))]
-    #print(_DIRTREE)
+    _DIRTREE = tfile.read()
     console.log("Completed directory tree JSON generation in " + str(round(((clock() - __DIRSTARTTIME__)*1000), 3)) + "ms")
 except Exception as e:
     console.warn("Could not complete directory tree JSON generation due to an unknown error. Substituting an empty dictionary instead.")
