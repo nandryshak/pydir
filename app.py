@@ -37,6 +37,7 @@ _DOMAIN = cfg._DOMAIN
 _ITEMTEMPLATE = cfg._ITEMTEMPLATE # What HTML to duplicate and fill for each file/dir
 _THEME = cfg._THEME # This is the html that should enclose the $content$
 _ALPHAORDER = cfg._ALPHAORDER
+_SKIPDIRS = cfg._SKIPDIRS
 
 # Misc utils
 
@@ -204,6 +205,24 @@ for root, dirs, files in os.walk("."):
         if item.endswith(".html"):
             files.remove(item)
 
+    # Now that we have removed the _EXCLUDES from the directory traversal
+    if(_SKIPDIRS):
+        contents = dirs + files
+        contents.sort()
+        contents = "".join(contents)# Combine the contents of dirs and files
+        try:
+            with open(root + '/dir.idx', 'r') as f: # Then write the "hash" string to a file.
+                if f.read() == contents: # If the current contents of this folder matches the saved ones...
+                    console.log("Directory " + root + " unchanged.")
+                    continue             # Then don't work on this folder. There's nothing to update.
+
+            # Little invisible "else" right here.
+            with open(root + '/dir.idx', 'w') as f: # If they don't match, write the new contents to the file.
+                console.log("Directory " + root + " changed. Generating...")
+                f.write(contents)
+        except FileNotFoundError: # This means this is the first run in this dir
+            with open(root + '/dir.idx', 'w') as f: # Then write the "hash" string to a file.
+                f.write(contents)
 
     # Calculate the root-step
     rootStep = "."
