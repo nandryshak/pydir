@@ -42,7 +42,7 @@ WEBROOT => Where to restrict symlinks to. Used in conjunction with `ALLOW_OUT_OF
 LOGLEVEL => What kinds of messages do you want logged. Levels are -1 for none, 0 for info, 1 for warning, 2 for errors, 3 for verbose.
 
 
-## These settings are for wizards only (or for those who are willing to read through the code)
+### These settings are for wizards only (or for those who are willing to read through the code)
 ITEMTEMPLATE = open("<filename>").read()  => Set <filename> to the path of whatever file you want to use as the template for individual items in the listing.
 
 THEME = open("<filename>").read() => This is the template html for each page.
