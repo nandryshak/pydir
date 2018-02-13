@@ -22,6 +22,9 @@ _DIRFILENAME = "index.html" # What should the directory html file be called?
 _DOMAIN = "localhost" # Set this to your domain name.
 _ALPHAORDER = True # Change to False if you do not want files and folders to be sorted alphabetically ( folders will still appear above files )
 
+_FOLLOWSYMLINKS = True      # Should the spider follow symbolic links?
+_ALLOW_OUT_OF_WEBROOT = False # When false, this will restrict symlink destinations to only those within the _WEBROOT
+_WEBROOT = "/var/www/html"   # THIS MUST BE CHANGED FOR SYMLINKS TO WORK.
 
 #vvv# Unless you want to debug the program leave this at the default. #vvv#'''
 _LOGLEVEL = 2 # Console debug log level. -1 for none, 0 for info, 1 for warning, 2 for errors, 3 for verbose.
@@ -31,5 +34,5 @@ _ITEMTEMPLATE = open("rsc/item-template.html").read() # What HTML to duplicate a
 _THEME = open("rsc/theme.html").read() # This is the html that should enclose the $content$
 
 
-_SKIPDIRS = True    # Should directories with no changes made since last run be skipped?
+_SKIPDIRS = False    # Should directories with no changes made since last run be skipped?
                     # Turn this off if pages aren't all updating properly.

@@ -17,6 +17,8 @@ from time import clock
 from datetime import datetime
 import tempfile # Used as a buffer zone for some functions
 import random
+import hashlib
+import xxhash
 
 # Custom Modules (found in ./lib )
 import lib.debug as debug
@@ -38,6 +40,9 @@ _ITEMTEMPLATE = cfg._ITEMTEMPLATE # What HTML to duplicate and fill for each fil
 _THEME = cfg._THEME # This is the html that should enclose the $content$
 _ALPHAORDER = cfg._ALPHAORDER
 _SKIPDIRS = cfg._SKIPDIRS
+_FOLLOWSYMLINKS = cfg._FOLLOWSYMLINKS     # Should the spider follow symbolic links?
+_WEBROOT = cfg._WEBROOT   # THIS MUST BE CHANGED FOR SYMLINKS TO WORK.
+_ALLOW_OUT_OF_WEBROOT = cfg._ALLOW_OUT_OF_WEBROOT
 
 # Misc utils
 
@@ -78,6 +83,14 @@ def dirTree(path, indent = 0, streak=0): # When called with no workingString arg
     #</li>
     #            '''
     for p in os.listdir(path):
+        # Remove symlinks if they leave the webroot
+        if(not _ALLOW_OUT_OF_WEBROOT):
+            fullPath = path + "/" + p
+            if os.path.islink(fullPath):
+                if(not os.readlink(fullPath).startswith(_WEBROOT)): # If the symlink's destination is outside the webroot...
+                    continue # SKIP the item
+            # Otherwise... do nothing! It's alright to continue!
+
         if p not in _EXCLUDES: # Make sure we're not looking at an ILLEGAL FOLDER >:(
             fullpath = os.path.join(path, p)
 
@@ -183,7 +196,8 @@ _files = []
 # Get directory tree based on first argument
 console.log("Beginning directory traversal...")
 __STARTTIME__ = clock()
-for root, dirs, files in os.walk("."):
+for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
+
     __DIRSTARTTIME__ = clock()
     # In every root directory, create a directory.html file.
     try:
@@ -205,11 +219,29 @@ for root, dirs, files in os.walk("."):
         if item.endswith(".html"):
             files.remove(item)
 
+    # Remove symlinks if they leave the webroot
+    if(not _ALLOW_OUT_OF_WEBROOT):
+        for item in dirs:
+            fullPath = root + "/" + item
+            if os.path.islink(fullPath):
+                if(not os.readlink(fullPath).startswith(_WEBROOT)): # If the symlink's destination is outside the webroot...
+                    dirs.remove(item) # SKIP the item
+            # Otherwise... do nothing! It's alright.
+
     # Now that we have removed the _EXCLUDES from the directory traversal
-    if(_SKIPDIRS):
-        contents = dirs + files
-        contents.sort()
-        contents = "".join(contents)# Combine the contents of dirs and files
+    if(_SKIPDIRS): # If the feature is enabled:
+        contents = ""
+        for item in files: # Loop through every file within and hash it
+            with open(root + "/" + item, "rb") as f:
+                try:
+                    m = xxhash.xxh64()
+                except:
+                    m = xxhash.xxh32()
+                m.update(f.read())
+                contents += m.hexdigest()
+        contents += "".join(dirs)
+
+        # Now actually compare the computed hash with the stored hash.
         try:
             with open(root + '/dir.idx', 'r') as f: # Then write the "hash" string to a file.
                 if f.read() == contents: # If the current contents of this folder matches the saved ones...
