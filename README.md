@@ -1,4 +1,4 @@
-# PYDIR
+# [PYDIR](https://github.com/montessquio/pydir)
 
 ## Generate static HTML pages for directory listings.
 
