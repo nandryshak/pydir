@@ -151,7 +151,7 @@ def dirTree(path, indent = 0, streak=0): # When called with no workingString arg
                     if os.path.isdir( os.path.join(fullpath, subd) ):
                         isEmpty = False
 
-                uid = ''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz') for i in range(6))
+                uid = ''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz') for i in range(8))
                 console.ilog("CSS UID for item " + subd + " is " + uid)
                 # Handle some css magic for the dropdowns.
                 # Not the nicest thing but it works.
