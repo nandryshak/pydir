@@ -399,7 +399,8 @@ for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
 
 
 
-    fileText = _THEME.replace("$content$", fileText) # Insert the generated page-content into the theme.
+    # Add the credits in the site comments.
+    fileText = _THEME.replace("$content$", "<!-- Made with PYDIR https://montessquio.github.io/pydir -->" + fileText + "<!-- Made with PYDIR https://montessquio.github.io/pydir -->") # Insert the generated page-content into the theme.
 
     # Theme Variable Insertion here
     fileText = fileText.replace("$root-dir$", root.strip("./"))
