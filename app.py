@@ -178,6 +178,7 @@ for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
     # Now that we have removed the _EXCLUDES from the directory traversal
     if(_SKIPDIRS): # If the feature is enabled:
         contents = ""
+        count = 0
         for item in files: # Loop through every file within and hash it
             with open(root + "/" + item, "rb") as f:
                 try:
@@ -186,6 +187,9 @@ for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
                     m = xxhash.xxh32()
                 m.update(f.read())
                 contents += m.hexdigest()
+            count += 1
+        if(count>0):
+            console.log("Hashed " + str(count) + " file(s) in '" + root + "'")
         contents += "".join(dirs)
 
         # Now actually compare the computed hash with the stored hash.

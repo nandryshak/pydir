@@ -26,7 +26,7 @@ _FOLLOWSYMLINKS = True      # Should the spider follow symbolic links?
 _ALLOW_OUT_OF_WEBROOT = False # When false, this will restrict symlink destinations to only those within the _WEBROOT
 _WEBROOT = "/var/www/html"   # THIS MUST BE CHANGED FOR SYMLINKS TO WORK.
 
-_SKIPDIRS = False   # Should directories with no changes made since last run be skipped?
+_SKIPDIRS = True   # Should directories with no changes made since last run be skipped?
                     # Turn this off if pages aren't all updating properly.
 
 #vvv# Unless you want to debug the program leave this at the default. #vvv#'''
