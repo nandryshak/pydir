@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """
 ##########################################
 PYDir - Generate beautiful static directory listings for your site.
