@@ -15,6 +15,37 @@ It first will compile HTML for the folders, then takes file names and calculates
 
 `python3 app.py /path/to/root/working/directory`(Note no ending forward slash!) You may use `.` or any relative naming to describe the directory. Please note that the program will write files to the chosen directory. Also note that the `include` folder will be copied in its entirety to the root directory of the target.
 
+Here is the help program help message, when run with `-h` or `--help`. Please note that this *may* not be up to date at all times.
+```
+usage: app.py [-h] [-v] [-q] [-qq] [-F] [-w WEBROOT] [-u] [-f FILENAME] [-s]
+              [-o OUTPUT]
+              path
+
+positional arguments:
+  path                  What path to work on.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -v, --verbose         Increase logging verbosity (warning: spam)
+  -q, --quiet           Decrease Logging Levels to Warning+
+  -qq, --no-output      Makes the program not output to stdout, only
+                        displaying fatal errors.
+  -F, --force           Force-regenerate all directories, even if no changes
+                        have been made.
+  -w WEBROOT, --webroot WEBROOT
+                        Specify a webroot to jail symlinks to.
+  -u, --unjail          Use to remove the restriction jailing symlink
+                        destinations to the webroot.
+  -f FILENAME, --filename FILENAME
+                        Manually set the name of the HTML file containing the
+                        directory listing.
+  -s, --sort            Sort directory entries alphabetically.
+  -o OUTPUT, --output OUTPUT
+                        Path to a text file to write program output to (file
+                        will be overwritten!). Use along with -qq to output to
+                        file and not stdout.
+```
+
 # Configuration
 
 Copy `cfg.py.default` to `cfg.py`. Then edit `cfg.py` to modify user options.
