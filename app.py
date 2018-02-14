@@ -183,9 +183,11 @@ for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
             with open(root + "/" + item, "rb") as f:
                 try:
                     m = xxhash.xxh64()
+                    m.update(f.read())
                 except:
                     m = xxhash.xxh32()
-                m.update(f.read())
+                    m.update(f.read())
+
                 contents += m.hexdigest()
             count += 1
         if(count>0):
