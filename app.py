@@ -18,7 +18,6 @@ from time import clock
 from datetime import datetime
 import tempfile # Used as a buffer zone for some functions
 import random
-import hashlib
 import xxhash
 
 ''' Argument Parsing '''
@@ -34,6 +33,7 @@ parser.add_argument("-w", "--webroot", help="Specify a webroot to jail symlinks 
 parser.add_argument("-u", "--unjail", action="store_true", help="Use to remove the restriction jailing symlink destinations to the webroot.")
 parser.add_argument("-f", "--filename", help="Manually set the name of the HTML file containing the directory listing.")
 parser.add_argument("-s", "--sort", action="store_true", help="Sort directory entries alphabetically.")
+parser.add_argument("-o", "--output", help="Path to a text file to write program output to (file will be overwritten!). Use along with -qq to output to file and not stdout.")
 args = parser.parse_args()
 
 # Custom Modules (found in ./lib )
@@ -50,15 +50,20 @@ except ImportError:
 if(args.no_output):
     cfg._LOGLEVEL = -1
 
+if((args.output != None) or (args.output == "")):
+    ofile = args.output
+else:
+    ofile = None
+
 if( (args.quiet == False) and (args.verbose == True) ):
-    console = debug.logger(level=cfg._LOGLEVEL, doIL = True) # Init log level before anything essential happens.
+    console = debug.logger(level=cfg._LOGLEVEL, doIL = True, oFile = ofile) # Init log level before anything essential happens.
     console.log("Console logging initialised!")
 elif( (args.quiet == False) and (args.verbose == False) ):
-    console = debug.logger(level=cfg._LOGLEVEL, doIL = False) # Init log level before anything essential happens.
+    console = debug.logger(level=cfg._LOGLEVEL, doIL = False, oFile = ofile) # Init log level before anything essential happens.
     console.log("Console logging initialised!")
 
 if(args.quiet):
-    console = debug.logger(level=cfg._LOGLEVEL, quiet=True) # Init log level before anything essential happens.
+    console = debug.logger(level=cfg._LOGLEVEL, quiet=True, oFile = ofile) # Init log level before anything essential happens.
 
 # Assign the CFG Vars locally.
 _EXCLUDES = cfg._EXCLUDES # Exclude matching files or folders from program operation

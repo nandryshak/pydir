@@ -1,6 +1,8 @@
 from time import gmtime
 from sys import exit
 from json import dumps
+from os import path
+import json
 
 '''
 Monty's Debug Library. Please note this software may be licenced differently
@@ -33,10 +35,13 @@ class logger:
     # Logging levels.
     # -1 = Disabled. 0 = INFO, 1 = WARN, 2 = ERROR, 3 = Internal Logs. FATAL will trigger at all levels aside from -1.
     # Manually set doIL to log ILOGS without changing overall log level. Basically -v flag.
-    def __init__(self, level=0, doIL = False, quiet=False):
+    def __init__(self, level=0, doIL = False, quiet=False, oFile = None):
         self.level = level
         self.doIL = doIL
         self.quiet = quiet
+
+        try: self.oFile = path.abspath(oFile)
+        except: self.oFile = None
 
     # Standard Logging level (1)
     def log(self, msg, endl="\n"):
@@ -46,6 +51,16 @@ class logger:
             except:
                 print("[INFO][" + __ftime__() + "] " + dumps(msg), end=endl)
 
+        if( self.oFile != None ):
+            try:
+                with open(self.oFile, "a") as f:
+                    try:
+                        f.write("[INFO][" + __ftime__() + "] " + msg + endl)
+                    except:
+                        f.write("[INFO][" + __ftime__() + "] " + dumps(msg) + endl)
+            except Exception as e:
+                print("[ERROR][" + __ftime__() + "] Unable to write to log file. Error : " + json.dumps(e), end=endl)
+
     # More serious logging level (2)
     def warn(self, msg, endl="\n"):
         if(self.level >= 1):
@@ -54,6 +69,15 @@ class logger:
             except:
                 print("[WARN][" + __ftime__() + "] " + dumps(msg), end=endl)
 
+        if( self.oFile != None ):
+            try:
+                with open(self.oFile, "a") as f:
+                    try:
+                        f.write("[INFO][" + __ftime__() + "] " + msg + endl)
+                    except:
+                        f.write("[INFO][" + __ftime__() + "] " + dumps(msg) + endl)
+            except:
+                print("[ERROR][" + __ftime__() + "] Unable to write to log file.", end=endl)
 
     # Most serious recoverable logging level (3)
     def error(self, msg, endl="\n"):
@@ -63,6 +87,15 @@ class logger:
             except:
                 print("[ERROR][" + __ftime__() + "] " + dumps(msg), end=endl)
 
+        if(self.self.oFile != ""):
+            try:
+                with open(self.self.oFile, "w") as f:
+                    try:
+                        f.write("[INFO][" + __ftime__() + "] " + msg + endl)
+                    except:
+                        f.write("[INFO][" + __ftime__() + "] " + dumps(msg) + endl)
+            except:
+                print("[ERROR][" + __ftime__() + "] Unable to write to log file.", end=endl)
 
     # Exits after execution. Optional cleanup method.
     def fatal(self, msg, methodCleanup = "", endl="\n"):
@@ -72,10 +105,19 @@ class logger:
             except:
                 print("[FATAL][" + __ftime__() + "] " + dumps(msg), end=endl)
 
+        if( self.oFile != None ):
+            try:
+                with open(self.oFile, "a") as f:
+                    try:
+                        f.write("[INFO][" + __ftime__() + "] " + msg + endl)
+                    except:
+                        f.write("[INFO][" + __ftime__() + "] " + dumps(msg) + endl)
+            except:
+                print("[ERROR][" + __ftime__() + "] Unable to write to log file.", end=endl)
 
-            try: exec(methodCleanup) # This should not be here, use something else.
-            except: pass
-            exit()
+        try: exec(methodCleanup) # This should not be here, use something else.
+        except: pass
+        exit()
 
     # fatals(afe) does not exit after giving a message.
     # should not be used. Instead, see error.
@@ -86,7 +128,17 @@ class logger:
             except:
                 print("[FATAL][" + __ftime__() + "] " + dumps(msg), end=endl)
 
-            print("Continuing...")
+        if( self.oFile != None ):
+            try:
+                with open(self.oFile, "a") as f:
+                    try:
+                        f.write("[INFO][" + __ftime__() + "] " + msg + endl)
+                    except:
+                        f.write("[INFO][" + __ftime__() + "] " + dumps(msg) + endl)
+            except:
+                print("[ERROR][" + __ftime__() + "] Unable to write to log file.", end=endl)
+
+        print("Continuing...")
 
     # internal logger.
     def ilog(self, msg, endl="\n"):
@@ -95,6 +147,16 @@ class logger:
                 print("[iLog][" + __ftime__() + "] " + msg, end=endl)
             except:
                 print("[iLog][" + __ftime__() + "] " + dumps(msg), end=endl)
+
+            if( self.oFile != None ):
+                try:
+                    with open(self.oFile, "a") as f:
+                        try:
+                            f.write("[INFO][" + __ftime__() + "] " + msg)
+                        except:
+                            f.write("[INFO][" + __ftime__() + "] " + dumps(msg))
+                except:
+                    print("[ERROR][" + __ftime__() + "] Unable to write to log file.", end=endl)
 
 # Internal Functions
 # Internal function for getting the current time string (formatted)
