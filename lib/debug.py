@@ -33,15 +33,14 @@ class logger:
     # Logging levels.
     # -1 = Disabled. 0 = INFO, 1 = WARN, 2 = ERROR, 3 = Internal Logs. FATAL will trigger at all levels aside from -1.
     # Manually set doIL to log ILOGS without changing overall log level. Basically -v flag.
-    def __init__(self, level=0, initMsg=None, doIL = False):
+    def __init__(self, level=0, doIL = False, quiet=False):
         self.level = level
         self.doIL = doIL
-        if(initMsg != None):
-            self.log(initMsg)
+        self.quiet = quiet
 
     # Standard Logging level (1)
     def log(self, msg, endl="\n"):
-        if(self.level >= 0):
+        if((self.level >= 0) and (self.quiet == False)):
             try:
                 print("[INFO][" + __ftime__() + "] " + msg, end=endl)
             except:
