@@ -28,6 +28,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("path", help="What path to work on.") # What path to work on
 parser.add_argument("-v", "--verbose", action="store_true", help="Increase logging verbosity (warning: spam)")
 parser.add_argument("-q", "--quiet", action="store_true", help="Decrease Logging Levels to Warning+")
+parser.add_argument("-qq", "--no-output", action="store_true", help="Makes the program not output to stdout, only displaying fatal errors.")
 parser.add_argument("-F", "--force", action="store_true", default=False, help="Force-regenerate all directories, even if no changes have been made.")
 parser.add_argument("-w", "--webroot", help="Specify a webroot to jail symlinks to.")
 parser.add_argument("-u", "--unjail", action="store_true", help="Use to remove the restriction jailing symlink destinations to the webroot.")
@@ -45,6 +46,9 @@ try:
     import cfg # Import the config file
 except ImportError:
     console.fatal("cfg.py was not able to be located. Please either copy cfg.py.default to cfg.py in the same directory as the python script or create it.")
+
+if(args.no_output):
+    cfg._LOGLEVEL = -1
 
 if( (args.quiet == False) and (args.verbose == True) ):
     console = debug.logger(level=cfg._LOGLEVEL, doIL = True) # Init log level before anything essential happens.
