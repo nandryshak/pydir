@@ -128,7 +128,7 @@ except: pass
 # Recursive directory tree to JSON converter with excludes support.
 # Modified version of https://unix.stackexchange.com/questions/164602/how-to-output-the-directory-structure-to-json-format
 def dirTree(path, indent = 0, streak=0): # When called with no workingString argument(as it should be, it will start from scratch.)
-    console.ilog("Running dirTree(" + path + ", " + indent + ", " + streak + ")")
+    console.ilog("Running dirTree(" + str(path) + ", " + str(indent) + ", " + str(streak) + ")")
     for p in os.listdir(path):
         # Remove symlinks if they leave the webroot
         if(not _ALLOW_OUT_OF_WEBROOT):
