@@ -52,7 +52,8 @@ SKIPDIRS => Should directories with no changes made since last run be skipped? T
 
 # Performance
 No significant benchmarking has been done, but it handles both many files in a single directory and many files scattered across many directories equally well.
-A ~65GB ebooks folder with ~10k loose files scanned completely in 10797.786ms, and a 129GB folder with ~15k files organized meticulously by category finished scanning in 13132.954ms. Suffice to say it makes pretty good time regardless of your needs.
+A ~65GB ebooks folder with ~10k loose files scanned completely in 30797.786ms, and a 129GB folder with ~15k files organized meticulously by category finished scanning in 93132.954ms. Suffice to say it makes pretty good time regardless of your needs. It also calculates hashes of the files in a directory, and compares those hashes on subsequent runs. If no file in that directory has been changed, it moves on, since it doesn't have to re-generate anything. This saves a *lot* of time on extremely large directories ( > 350 GB ), where a scan can take tens of minutes.
+
 Additionally, it uses the unix utility `du` to scan for file size. Therefore it never has to actually open the file and determine it's size, allowing for files of any size to be scanned. If `du` is not available for any reason, it will default to the universal, albeit slow, python method of opening files. It is reccomended to have `du` installed on your system.
 
 # Search
