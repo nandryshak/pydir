@@ -32,9 +32,12 @@ THE SOFTWARE.
 class logger:
     # Logging levels.
     # -1 = Disabled. 0 = INFO, 1 = WARN, 2 = ERROR, 3 = Internal Logs. FATAL will trigger at all levels aside from -1.
-    def __init__(self, level=0, initMsg="Console Logging Initialised"):
+    # Manually set doIL to log ILOGS without changing overall log level. Basically -v flag.
+    def __init__(self, level=0, initMsg=None, doIL = False):
         self.level = level
-        self.log(initMsg)
+        self.doIL = doIL
+        if(initMsg != None):
+            self.log(initMsg)
 
     # Standard Logging level (1)
     def log(self, msg, endl="\n"):
@@ -86,15 +89,16 @@ class logger:
 
             print("Continuing...")
 
-    # internal logger. This should be used by modules only.
-    def ilog(self, calling_module, msg, endl="\n"):
-        pass #Stub
+    # internal logger.
+    def ilog(self, msg, endl="\n"):
+        if((self.level >= 3) or (self.doIL == True)):
+            try:
+                print("[iLog][" + __ftime__() + "] " + msg, end=endl)
+            except:
+                print("[iLog][" + __ftime__() + "] " + dumps(msg), end=endl)
 
 # Internal Functions
 # Internal function for getting the current time string (formatted)
 # Format is HH:MM:SS
 def __ftime__():
     return ':'.join([str(gmtime().tm_hour), str(gmtime().tm_min), str(gmtime().tm_sec)])
-
-def __nop__():
-    pass

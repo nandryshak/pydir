@@ -26,7 +26,7 @@ import argparse
 parser = argparse.ArgumentParser()
 
 parser.add_argument("path", help="What path to work on.") # What path to work on
-parser.add_argument("-v", "--verbose", action="store_true", help="Increase logging verbosity (not implemented)")
+parser.add_argument("-v", "--verbose", action="store_true", help="Increase logging verbosity (warning: spam)")
 parser.add_argument("-F", "--force", action="store_true", default=False, help="Force-regenerate all directories, even if no changes have been made.")
 parser.add_argument("-w", "--webroot", help="Specify a webroot to jail symlinks to.")
 parser.add_argument("-u", "--unjail", action="store_true", help="Use to remove the restriction jailing symlink destinations to the webroot.")
@@ -34,47 +34,79 @@ parser.add_argument("-f", "--filename", help="Manually set the name of the HTML 
 parser.add_argument("-s", "--sort", action="store_true", help="Sort directory entries alphabetically.")
 args = parser.parse_args()
 
+# Custom Modules (found in ./lib )
+import lib.debug as debug
+console = debug.logger(level=2) # Tentative logger in case importing the config fails. Real logger set up below.
+
 
 ''' Set up runtime variables and configuration values. '''
-import cfg # Import the config file
+try:
+    import cfg # Import the config file
+except ImportError:
+    console.fatal("cfg.py was not able to be located. Please either copy cfg.py.default to cfg.py in the same directory as the python script or create it.")
+
+if(args.verbose):
+    console = debug.logger(level=cfg._LOGLEVEL, initMsg="Console logging started.", doIL = True) # Init log level before anything essential happens.
+else:
+    console = debug.logger(level=cfg._LOGLEVEL, initMsg="Console logging started.", doIL = False) # Init log level before anything essential happens.
+
 
 # Assign the CFG Vars locally.
 _EXCLUDES = cfg._EXCLUDES # Exclude matching files or folders from program operation
+console.ilog("Loaded _EXCLUDES: " + json.dumps(_EXCLUDES))
+
 _DIRFILENAME = cfg._DIRFILENAME # What should the directory html file be called?
+console.ilog("_DIRFILENAME Set to " + _DIRFILENAME)
+
 _DOMAIN = cfg._DOMAIN
+console.ilog("_DOMAIN Set to " + _DOMAIN)
+
 _ITEMTEMPLATE = cfg._ITEMTEMPLATE # What HTML to duplicate and fill for each file/dir
 _THEME = cfg._THEME # This is the html that should enclose the $content$
+
 _ALPHAORDER = cfg._ALPHAORDER
+console.ilog("_ALPHAORDER Set to " + json.dumps(_ALPHAORDER))
+
 _SKIPDIRS = cfg._SKIPDIRS
+console.ilog("_SKIPDIRS Set to " + json.dumps(_SKIPDIRS))
+
 _FOLLOWSYMLINKS = cfg._FOLLOWSYMLINKS     # Should the spider follow symbolic links?
+console.ilog("_FOLLOWSYMLINKS Set to " + json.dumps(_FOLLOWSYMLINKS))
+
 _WEBROOT = cfg._WEBROOT   # THIS MUST BE CHANGED FOR SYMLINKS TO WORK.
+console.ilog("_WEBROOT Set to " + _WEBROOT)
+
 _ALLOW_OUT_OF_WEBROOT = cfg._ALLOW_OUT_OF_WEBROOT
-
-
-# Custom Modules (found in ./lib )
-import lib.debug as debug
-console = debug.logger(level=cfg._LOGLEVEL, initMsg="Console logging started.") # Init log level before anything essential happens.
+console.ilog("_ALLOW_OUT_OF_WEBROOT Set to " + json.dumps(_ALLOW_OUT_OF_WEBROOT))
 
 # Now, set CLI arg flags to override cfg settings if set.
 if(args.force):
     _SKIPDIRS = False
+    console.ilog("_SKIPDIRS Overridden by argument to False")
 
 if(args.webroot != None):
     _FOLLOWSYMLINKS = True
     _WEBROOT = args.webroot
     _ALLOW_OUT_OF_WEBROOT = False
+    console.ilog("WEBROOT Overridden by argument to " + _WEBROOT)
 
 if(args.unjail):
     console.warn("Symlink destinations have been allowed outside of the webroot! This is not reccomended and presents a security risk!")
     _ALLOW_OUT_OF_WEBROOT = True
+    console.ilog("_ALLOW_OUT_OF_WEBROOT Overridden by argument to True")
 
 if(args.filename != None):
     _DIRFILENAME = args.filename
+    console.ilog("_DIRFILENAME Overridden by argument to " + json.dumps(_DIRFILENAME))
 
 if(args.sort):
     _ALPHAORDER = True
+    console.ilog("_ALPHAORDER Overridden by argument to True")
+
 
 _ROOTDIR = args.path # The root working directory is specified as the first cli arg.
+console.ilog("RootDir set to " + _ROOTDIR)
+
 # Handle in case cfg.py does not contain cfg._ROOTDIR
 try: _ROOTDIR = cfg._ROOTDIR
 except: pass
@@ -82,6 +114,7 @@ except: pass
 # Recursive directory tree to JSON converter with excludes support.
 # Modified version of https://unix.stackexchange.com/questions/164602/how-to-output-the-directory-structure-to-json-format
 def dirTree(path, indent = 0, streak=0): # When called with no workingString argument(as it should be, it will start from scratch.)
+    console.ilog("Running dirTree(" + path + ", " + indent + ", " + streak + ")")
     for p in os.listdir(path):
         # Remove symlinks if they leave the webroot
         if(not _ALLOW_OUT_OF_WEBROOT):
@@ -102,6 +135,7 @@ def dirTree(path, indent = 0, streak=0): # When called with no workingString arg
                         isEmpty = False
 
                 uid = ''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz') for i in range(6))
+                console.ilog("CSS UID for item " + subd + " is " + uid)
                 # Handle some css magic for the dropdowns.
                 # Not the nicest thing but it works.
                 # I need to dynamically write styles here to make use of the button hack
@@ -118,6 +152,7 @@ def dirTree(path, indent = 0, streak=0): # When called with no workingString arg
 
                 if(isEmpty): # If there are no subfolders, switch the chevron for the folder icon
                     tfile.write('<style>#chevron_' + uid + '{background-image:url(/include/images/fallback/folder.png);background-size:70%;background-position:right center}</style>')
+                    console.ilog("Working Dir is Empty. Removing Chevron")
             tfile.write("</li>")
 
 # Convert byte count to size string
@@ -142,12 +177,14 @@ def dirSize(start_path = '.'):
 
 console.log("Copying ./include to " + _ROOTDIR + "/include")
 os.system("cp -r include/ " + _ROOTDIR)
-4
+
 console.log("Copying ./search.html to " + _ROOTDIR)
 SearchText = ""
+console.ilog("Opening ./rsc/search.html...")
 with open('./rsc/search.html', 'r') as search_HTML: # First grab the original HTML template.
     SearchText = search_HTML.read().replace('$domain$', _DOMAIN) # Sub-in necessary values
 
+console.ilog("Moving to working directory " + _ROOTDIR)
 os.chdir(_ROOTDIR) # Switch to specified working directory.
 console.log("Working directory is now " + _ROOTDIR)
 
@@ -156,6 +193,7 @@ try:
     __DIRSTARTTIME__ = clock() # TIme the operation
 
     # dirTree exports it's composed HTML to a temporary file in memory.
+    console.ilog("Spooled temporary file in memory.")
     tfile = tempfile.SpooledTemporaryFile(mode="w+s")
     dirTree(".")
     tfile.seek(0)
@@ -166,8 +204,10 @@ except Exception as e:
     console.warn("Error Information: " + str(e))
     _DIRTREE = ""
 
+console.ilog("Opening /search.html and performing sidenav substitution")
 with open(_ROOTDIR + '/search.html', 'w+') as search_HTML_final: # Then write the composed HTML to file.
     search_HTML_final.write(SearchText.replace("$sidenav$", _DIRTREE))
+    console.ilog("Successfully wrote the sidenav into the search page.")
 
 # Reserve a global variable to contain a list of all files.
 # Really it is an array of Dictionaries, where each dictionary is a single file
@@ -177,20 +217,23 @@ _files = []
 console.log("Beginning directory traversal...")
 __STARTTIME__ = clock()
 for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
-
+    console.ilog("Traversing " + root + " :: " + json.dumps(dirs) + json.dumps(files))
     __DIRSTARTTIME__ = clock()
     # In every root directory, create a directory.html file.
     try:
         dirFile = open(root + ("/"+_DIRFILENAME), "w")
-    except OSError: console.error("Could not create directory.html for root " + root)
+        console.ilog("Created " + _DIRFILENAME + " in " + root)
+    except OSError: console.error("Could not create " + _DIRFILENAME + " for root " + root)
 
     # Remove the _EXCLUDES from traversal targets
     for item in _EXCLUDES:
         try:
             dirs.remove(item)
+            console.ilog("Removed " + item + " from scan based on _EXCLUDES")
         except:
             try:
                 files.remove(item)
+                console.ilog("Removed " + item + " from scan based on _EXCLUDES")
             except:
                 pass
                 #console.warn("Exclude " + item + " not found in \"" + root + "\" ... Moving on...")
@@ -198,6 +241,7 @@ for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
     for item in files:
         if item.endswith(".html"):
             files.remove(item)
+            console.ilog("Removed " + item + " from scan due to custom exclusion: *.html")
 
     # Remove symlinks if they leave the webroot
     if(not _ALLOW_OUT_OF_WEBROOT):
@@ -206,6 +250,7 @@ for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
             if os.path.islink(fullPath):
                 if(not os.readlink(fullPath).startswith(_WEBROOT)): # If the symlink's destination is outside the webroot...
                     dirs.remove(item) # SKIP the item
+                    console.ilog("Removed symlink " + item + " because it referred to a location outside of the webroot and jailing is enabled.")
             # Otherwise... do nothing! It's alright.
 
     # Now that we have removed the _EXCLUDES from the directory traversal
@@ -217,9 +262,11 @@ for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
                 try:
                     m = xxhash.xxh64()
                     m.update(f.read())
+                    console.ilog("Calculated hash of " + item + " (64 Bit)")
                 except:
                     m = xxhash.xxh32()
                     m.update(f.read())
+                    console.ilog("Calculated hash of " + item + " (32 Bit)")
 
                 contents += m.hexdigest()
             count += 1
@@ -241,11 +288,13 @@ for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
         except FileNotFoundError: # This means this is the first run in this dir
             with open(root + '/dir.idx', 'w') as f: # Then write the "hash" string to a file.
                 f.write(contents)
+                console.ilog("dir.idx not found! Writing current directory digest to new file.")
 
     # Calculate the root-step
     rootStep = "."
     for item in root.split("/")[1:]:
         rootStep += "/.."
+    console.ilog("rootStep has been adjusted to " + rootStep)
 
     # Now traverse files and folders in the current root and add them, through the template, to directory.html
     fileText = "" # Begin with an empty string.
@@ -266,6 +315,7 @@ for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
     if _ALPHAORDER:
         dirs.sort()
     for item in dirs: # First add the dirs
+        console.ilog("Generating listing item for dir " + item)
         tmp = _ITEMTEMPLATE.replace("$class$", 'icon')
         tmp = tmp.replace("$item-type$", 'icon dir-icon')# icon-type is dir.
         tmp = tmp.replace("$file-href$", ("." + "/" + item)) # subdirs are in "this" dir so it can be ./<file>
@@ -294,6 +344,7 @@ for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
         files.sort()
 
     for item in files: # Second add the files
+        console.ilog("Generating listing item for file " + item)
         tmp = _ITEMTEMPLATE.replace("$class$", 'icon file')
         tmp = tmp.replace("$item-type$", 'icon file-icon') # icon-type is file.
         tmp = tmp.replace("$file-href$", ("." + "/" + item)) # files are in "this" dir so it can be ./<file>
