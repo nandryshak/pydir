@@ -42,6 +42,9 @@ console = debug.logger(level=2) # Tentative logger in case importing the config 
 
 
 ''' Set up runtime variables and configuration values. '''
+
+_VERSION = "2.1.0"
+
 try:
     import cfg # Import the config file
 except ImportError:
