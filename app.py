@@ -20,6 +20,20 @@ import random
 import hashlib
 import xxhash
 
+''' Argument Parsing '''
+import argparse
+parser = argparse.ArgumentParser()
+
+parser.add_argument("path", help="What path to work on.") # What path to work on
+parser.add_argument("-v", "--verbose", action="store_true", help="Increase logging verbosity (not implemented)")
+parser.add_argument("-F", "--force", action="store_true", default=False, help="Force-regenerate all directories, even if no changes have been made.")
+parser.add_argument("-w", "--webroot", help="Specify a webroot to jail symlinks to.")
+parser.add_argument("-u", "--unjail", action="store_true", help="Use to remove the restriction jailing symlink destinations to the webroot.")
+parser.add_argument("-f", "--filename", help="Manually set the name of the HTML file containing the directory listing.")
+parser.add_argument("-s", "--sort", action="store_true", help="Sort directory entries alphabetically.")
+args = parser.parse_args()
+
+
 ''' Set up runtime variables and configuration values. '''
 import cfg # Import the config file
 
@@ -40,8 +54,26 @@ _ALLOW_OUT_OF_WEBROOT = cfg._ALLOW_OUT_OF_WEBROOT
 import lib.debug as debug
 console = debug.logger(level=cfg._LOGLEVEL, initMsg="Console logging started.") # Init log level before anything essential happens.
 
+# Now, set CLI arg flags to override cfg settings if set.
+if(args.force):
+    _SKIPDIRS = False
 
-_ROOTDIR = sys.argv[1] # The root working directory is specified as the first cli arg.
+if(args.webroot != None):
+    _FOLLOWSYMLINKS = True
+    _WEBROOT = args.webroot
+    _ALLOW_OUT_OF_WEBROOT = False
+
+if(args.unjail):
+    console.warn("Symlink destinations have been allowed outside of the webroot! This is not reccomended and presents a security risk!")
+    _ALLOW_OUT_OF_WEBROOT = True
+
+if(args.filename != None):
+    _DIRFILENAME = args.filename
+
+if(args.sort):
+    _ALPHAORDER = True
+
+_ROOTDIR = args.path # The root working directory is specified as the first cli arg.
 # Handle in case cfg.py does not contain cfg._ROOTDIR
 try: _ROOTDIR = cfg._ROOTDIR
 except: pass
@@ -269,13 +301,16 @@ for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
 
         # Handle Filesizes
         try: # Preferred method, as it is very fast.
-            fileSize = int(os.popen("du -b " + '"' + root + "/" + item + '"').read().split("\t")[0])
+            fileSize = os.popen("du -b " + '"' + root + "/" + item + '"').read().split("\t")[0]
         except Exception as e: # Failure likely means DU is not installed on the system, therefore we should use the slow method.
             console.warn("DU is either not installed or erroring. It is reccomended to have DU installed on your system; the backup method is very slow.")
             console.warn("Exception in file: " + root + "/" + item + " Is error :    " + str(e))
             fileSize = len(open(root + "/" + item, "rb").read()) #File size is the length of all the bytes of the file. SLOW
 
-        fileSize = fileSizeCount(fileSize)
+        try:
+            fileSize = fileSizeCount(int(fileSize))
+        except:
+            fileSize = "ERR"
 
         # Add in the converted statistic
         tmp = tmp.replace("$filesize$", str(fileSize))
