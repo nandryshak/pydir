@@ -298,6 +298,11 @@ for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
                     console.ilog("Removed symlink " + item + " because it referred to a location outside of the webroot and jailing is enabled.")
             # Otherwise... do nothing! It's alright.
 
+    try: # If this fails it means tree's not been run because -q or -qq has been specified.
+        printProgressBar(iteration, tree, prefix="Progress:", length=50)
+    except:
+        pass
+
     # Now that we have removed the _EXCLUDES from the directory traversal
     if(_SKIPDIRS): # If the feature is enabled:
         contents = ""
@@ -478,10 +483,6 @@ for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
         console.warn("Exception information: " + str(e))
     console.log("Generated entries for " + str(dirCount) + " directories and " + str(fileCount) + " files in folder /" + root.strip("./") + ". Took " + str(round(((clock() - __DIRSTARTTIME__)*1000), 3)) + "ms")
 
-    try: # If this fails it means tree's not been run because -q or -qq has been specified.
-        printProgressBar(iteration, tree, prefix="Progress:", length=50)
-    except:
-        pass
 
 console.log("Loading File Entries into files.json in /includes...")
 
