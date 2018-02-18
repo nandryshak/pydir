@@ -121,7 +121,8 @@ if(args.sort):
     console.ilog("_ALPHAORDER Overridden by argument to True")
 
 
-_ROOTDIR = args.path # The root working directory is specified as the first cli arg.
+_ROOTDIR = args.path.rstrip('/') # The root working directory is specified as the first cli arg.
+console.log(_ROOTDIR)
 console.ilog("RootDir set to " + _ROOTDIR)
 
 # Handle in case cfg.py does not contain cfg._ROOTDIR
