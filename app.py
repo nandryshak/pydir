@@ -254,6 +254,7 @@ _files = []
 # Set up the progressbar
 if(not args.quiet):
     # Parse the results of tree
+    console.ilog("Counting files using tree -I")
     tree = int(os.popen("tree -I \"" + "|".join(_EXCLUDES) + "\"").read().split('\n')[-2].split(' ')[0]) # Do some chain magic to grab the number of directories in the tree.
 
 # Get directory tree based on first argument
@@ -267,7 +268,7 @@ for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
         printProgressBar(iteration, tree, prefix="Progress:", length=50)
     except:
         pass
-        
+
     console.ilog("Traversing " + root + " :: " + json.dumps(dirs) + json.dumps(files))
     __DIRSTARTTIME__ = clock()
     # In every root directory, create a directory.html file.
