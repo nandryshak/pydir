@@ -10,6 +10,7 @@ It first will compile HTML for the folders, then takes file names and calculates
  - Unix `du` utility. It should be already installed in your Unix or Linux Distro. (Note: Read "Performance" below.)
  - Python 3.5.2 or other compatible version.
  - xxHash: [pip install xxhash](https://cyan4973.github.io/xxHash/)
+ - Unix  `tree` utility is optional and will allow for the program to display a progress bar as it runs.
 
 # Usage
 

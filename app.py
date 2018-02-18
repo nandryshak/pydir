@@ -15,6 +15,7 @@ import os
 import sys
 import json # Mostly used for debugging
 from time import clock
+from time import sleep
 from datetime import datetime
 import tempfile # Used as a buffer zone for some functions
 import random
@@ -189,6 +190,25 @@ def dirSize(start_path = '.'):
             total_size += os.path.getsize(os.path.join(dirpath, f))
     return total_size
 
+# https://stackoverflow.com/questions/3173320/text-progress-bar-in-the-console
+def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█'):
+    """
+    Call in a loop to create terminal progress bar
+    @params:
+        iteration   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : positive number of decimals in percent complete (Int)
+        length      - Optional  : character length of bar (Int)
+        fill        - Optional  : bar fill character (Str)
+    """
+    if iteration >= total:
+        return
+    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+    filledLength = int(length * iteration // total)
+    bar = fill * filledLength + '-' * (length - filledLength)
+    print('\r%s [%s] %s%% %s' % (prefix, bar, percent, suffix), end = '\r')
 
 '''# MAIN PROGRAM START #'''
 
@@ -230,10 +250,18 @@ with open(_ROOTDIR + '/search.html', 'w+') as search_HTML_final: # Then write th
 # Really it is an array of Dictionaries, where each dictionary is a single file
 _files = []
 
+# Set up the progressbar
+if(not args.quiet):
+    # Parse the results of tree
+    tree = int(os.popen("tree -I \"" + "|".join(_EXCLUDES) + "\"").read().split('\n')[-2].split(' ')[0]) # Do some chain magic to grab the number of directories in the tree.
+
 # Get directory tree based on first argument
 console.log("Beginning directory traversal...")
 __STARTTIME__ = clock()
+iteration = 0 # Keep track of how many folders we've gone into (for the progbar)
 for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
+    iteration += 1 # Increment the amount of folders we've gone into so far.
+
     console.ilog("Traversing " + root + " :: " + json.dumps(dirs) + json.dumps(files))
     __DIRSTARTTIME__ = clock()
     # In every root directory, create a directory.html file.
@@ -449,7 +477,8 @@ for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
         console.warn("There was an unhandled error while writing the directory \"" + root + "\"...")
         console.warn("Exception information: " + str(e))
     console.log("Generated entries for " + str(dirCount) + " directories and " + str(fileCount) + " files in folder /" + root.strip("./") + ". Took " + str(round(((clock() - __DIRSTARTTIME__)*1000), 3)) + "ms")
-    # print(fileText)
+
+    printProgressBar(iteration, tree, prefix="Progress:", length=50)
 
 console.log("Loading File Entries into files.json in /includes...")
 
