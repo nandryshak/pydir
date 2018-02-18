@@ -477,7 +477,10 @@ for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
         console.warn("Exception information: " + str(e))
     console.log("Generated entries for " + str(dirCount) + " directories and " + str(fileCount) + " files in folder /" + root.strip("./") + ". Took " + str(round(((clock() - __DIRSTARTTIME__)*1000), 3)) + "ms")
 
-    printProgressBar(iteration, tree, prefix="Progress:", length=50)
+    try: # If this fails it means tree's not been run because -q or -qq has been specified.
+        printProgressBar(iteration, tree, prefix="Progress:", length=50)
+    except:
+        pass
 
 console.log("Loading File Entries into files.json in /includes...")
 
