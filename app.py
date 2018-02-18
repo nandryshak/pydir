@@ -204,11 +204,12 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
         fill        - Optional  : bar fill character (Str)
     """
     if iteration >= total:
-        return
-    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
-    filledLength = int(length * iteration // total)
-    bar = fill * filledLength + '-' * (length - filledLength)
-    print('\r%s [%s] %s%% %s' % (prefix, bar, percent, suffix), end = '\r')
+        pass
+    else:
+        percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+        filledLength = int(length * iteration // total)
+        bar = fill * filledLength + '-' * (length - filledLength)
+        print('\r%s [%s] %s%% %s' % (prefix, bar, percent, suffix), end = '\r')
 
 '''# MAIN PROGRAM START #'''
 
@@ -262,6 +263,11 @@ iteration = 0 # Keep track of how many folders we've gone into (for the progbar)
 for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
     iteration += 1 # Increment the amount of folders we've gone into so far.
 
+    try: # If this fails it means tree's not been run because -q or -qq has been specified.
+        printProgressBar(iteration, tree, prefix="Progress:", length=50)
+    except:
+        pass
+        
     console.ilog("Traversing " + root + " :: " + json.dumps(dirs) + json.dumps(files))
     __DIRSTARTTIME__ = clock()
     # In every root directory, create a directory.html file.
@@ -298,10 +304,6 @@ for root, dirs, files in os.walk(".", followlinks=_FOLLOWSYMLINKS):
                     console.ilog("Removed symlink " + item + " because it referred to a location outside of the webroot and jailing is enabled.")
             # Otherwise... do nothing! It's alright.
 
-    try: # If this fails it means tree's not been run because -q or -qq has been specified.
-        printProgressBar(iteration, tree, prefix="Progress:", length=50)
-    except:
-        pass
 
     # Now that we have removed the _EXCLUDES from the directory traversal
     if(_SKIPDIRS): # If the feature is enabled:

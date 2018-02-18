@@ -46,6 +46,7 @@ class logger:
     # Standard Logging level (1)
     def log(self, msg, endl="\n"):
         if((self.level >= 0) and (self.quiet == False)):
+            print('', end='\r')
             try:
                 print("[INFO][" + __ftime__() + "] " + msg, end=endl)
             except:
@@ -64,6 +65,7 @@ class logger:
     # More serious logging level (2)
     def warn(self, msg, endl="\n"):
         if(self.level >= 1):
+            print('', end='\r')
             try:
                 print("[WARN][" + __ftime__() + "] " + msg, end=endl)
             except:
@@ -82,6 +84,7 @@ class logger:
     # Most serious recoverable logging level (3)
     def error(self, msg, endl="\n"):
         if(self.level >= 2):
+            print('', end='\r')
             try:
                 print("[ERROR][" + __ftime__() + "] " + msg, end=endl)
             except:
@@ -100,6 +103,7 @@ class logger:
     # Exits after execution. Optional cleanup method.
     def fatal(self, msg, methodCleanup = "", endl="\n"):
         if(self.level >=0):
+            print('', end='\r')
             try:
                 print("[FATAL][" + __ftime__() + "] " + msg, end=endl)
             except:
@@ -123,6 +127,7 @@ class logger:
     # should not be used. Instead, see error.
     def fatals(self, msg, endl="\n"):
         if(self.level >= 0):
+            print('', end='\r')
             try:
                 print("[FATAL][" + __ftime__() + "] " + msg, end=endl)
             except:
@@ -143,6 +148,7 @@ class logger:
     # internal logger.
     def ilog(self, msg, endl="\n"):
         if((self.level >= 3) or (self.doIL == True)):
+            print('', end='\r')
             try:
                 print("[iLog][" + __ftime__() + "] " + msg, end=endl)
             except:
