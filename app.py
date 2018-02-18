@@ -15,7 +15,6 @@ import os
 import sys
 import json # Mostly used for debugging
 from time import clock
-from time import sleep
 from datetime import datetime
 import tempfile # Used as a buffer zone for some functions
 import random
