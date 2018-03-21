@@ -171,7 +171,8 @@ def dirTree(path, indent = 0, streak=0): # When called with no workingString arg
                 if(isEmpty): # If there are no subfolders, switch the chevron for the folder icon
                     tfile.write('<style>#chevron_' + uid + '{background-image:url(/include/images/fallback/folder.png);background-size:70%;background-position:right center}</style>')
                     console.ilog("Working Dir is Empty. Removing Chevron")
-            tfile.write("</li>")
+                
+                tfile.write("</li>")
 
 # Convert byte count to size string
 def fileSizeCount(fileSize):
