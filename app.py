@@ -244,7 +244,7 @@ except Exception as e:
     _DIRTREE = ""
 
 console.ilog("Opening /search.html and performing sidenav substitution")
-with open(_ROOTDIR + '/search.html', 'w+') as search_HTML_final: # Then write the composed HTML to file.
+with open('./search.html', 'w+') as search_HTML_final: # Then write the composed HTML to file.
     search_HTML_final.write(SearchText.replace("$sidenav$", _DIRTREE))
     console.ilog("Successfully wrote the sidenav into the search page.")
 
